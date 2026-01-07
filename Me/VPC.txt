@@ -1,0 +1,90 @@
+VPC - Virtual Private Cloud. (AWS)
+Vnet- Virtual Network. (Azure)
+
+- The private IP's provided to us in EC2 are dependent upon the CIDR.
+ - example : 172.31.0.0/16 is the CIDR, then 172.31.72.11 is the Private IP.
+ - 172 is from Class B and IPv4. /16 is the subnet masking. 172 - 8 bits, 31 - 8 bits, 0 - 8 bits, 0 - 8 bits ---> 32 bits total.
+ - 2^(32-16) = 2^16 = 65,536. This is the calculation for number of hosts.
+
+- CIDR - Classless Inter Domain Range - CIDR is a notation used to specify how many IP addresses are available in a network.
+
+- IPv4 - 172.31.72.11 - IPv4 addresses are always 32 bits; CIDR only splits those bits between network and host portions.
+- IPv6 - 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+- VPC's play an important to provide connection from one instance to another instance.
+- IGW - Internet Gateway --> It is used to provide inbound and outbound access.
+- RT - Route Table --> It is used to define traffic routing rules.
+
+- Firewalls: To restrict unauthorized access to our instance.
+ - NACL - Network Access Control List - Restricts access at subnet level. We can allow or deny the request. It will work based on rule number, the lower the rule number, the higher it's priority.
+ - SG - Security Groups - Restricts access at instance level. By default every port number is denied by SG (to access, allow the port number in inbound rule).
+
+- A = Big, B = Medium, C = Small, D = Multicast, E = Experiment
+ | Class | First Octet | Subnet Mask   | Hosts/Network | Usage          |
+ | ----- | ----------- | ------------- | ------------- | -------------- |
+ | A     | 1–126       | 255.0.0.0     | ~16M          | Large orgs     |
+ | B     | 128–191     | 255.255.0.0   | ~65K          | Medium orgs    |
+ | C     | 192–223     | 255.255.255.0 | 254           | Small networks |
+ | D     | 224–239     | N/A           | N/A           | Multicast      |
+ | E     | 240–255     | N/A           | N/A           | Experimental   |
+
+- IPv4 is smaller and exhausted; IPv6 is larger, more secure, and future-proof.
+| Feature            | IPv4                         | IPv6                            |
+| ------------------ | ---------------------------- | --------------------------------|
+| Address size       | 32-bit                       | 128-bit                         |
+| Address format     | Decimal (e.g. `192.168.1.1`) | Hexadecimal (e.g. `2001:db8::1`)|
+| Total addresses    | ~4.3 billion                 | ~3.4 × 10³⁸                     |
+| Address exhaustion |  Yes                         |  No                             |
+| NAT required       |  Yes                         |  No                             |
+| Configuration      | Manual / DHCP                | Auto-config (SLAAC)             |
+| Security (IPsec)   | Optional                     | Built-in                        |
+| Broadcast          | Supported                    |  No (uses multicast)            |
+
+- Subnet Masking: Subnet masking decides how many IPs a subnet has and how AWS isolates resources.
+ - 172.31.0.0/08 ---> Min in Azure.
+ - 172.31.0.0/16 ---> Min in AWS.
+ - 172.31.0.0/32 ---> Max in AWS and Azure.
+
+- To calculate the number of hosts in a subnet, subtract the subnet mask from the total number of IPv4 bits (32).
+ - Hosts = 2^(32 − subnet mask)
+
+- Whenver we create a new VPC, a default Routing Table and ACL is created.
+
+- Subnet is a smaller network created from a larger network to organize and control traffic. They are of two types:
+ - Public Subnet - Has a route to an Internet Gateway (IGW), allowing internet access.
+ - Private Subnet - Does not have a route to an IGW; outbound internet access is possible via a NAT Gateway or NAT Instance in a public subnet.
+
+- Private IP's are used for internal connection from inside one instance to another. Just copy the .pem key and paste the content in a new file inside the first instance, then just use ssh to connect to the other instance.
+
+
+- A bastion server (also called a jump server) is a secure server placed in a public subnet that is used to access servers in private subnets.
+ - Create a NAT gateway in private routing table and IGW in public routing table. Connect from public instance to private instance and you will be able to use internet on private instance.
+
+- Private instances are placed in private subnets to avoid exposing their IP addresses to the internet. The design prevents exposing the private instance’s IP to the internet while still allowing controlled access and outbound connectivity. 
+
+- NAT Gateway/NAT Instance: Netwrok Address Translation. They are used to provide internet access to private subnets.
+ - NAT Gateway - AWS provided service, maintained and managed by AWS itself.
+ - NAT Instance - Regular ec2 with NAT configuration, we are responsible for maintenance and uptime.
+ - Always configure NAT gateway as Public.
+ - Elastic IP is static or fixed IP address.
+
+- IGW is used for inbound and outbound access 
+- NAT is used only for outbound access.
+
+- NAT Instance - You can use a community AMI with NAT configuration. Go to actions, networking, change source/destination and stop the networking. Then just go to VPC, Route tables, private subnet and then add instance and choose the NAT instance.
+
+- VPC Flow Logs - VPC Flow Logs capture metadata about IP traffic going to and from VPC resources and help with monitoring, troubleshooting, and security analysis.
+
+- Amazon S3 - Amazon S3 is a cloud storage service used to store and retrieve files from anywhere over the internet - the bucket name must always be unique.
+
+- Amazon data firehose - Amazon Kinesis Data Firehose takes real-time data and automatically sends it to destinations like S3 or Redshift.
+
+- Interview Points:
+ - 127.x.x.x → Loopback (not Class A usable)
+ - 0.0.0.0 → Default route
+ - Classful addressing is obsolete
+ - Modern networks use CIDR (/24, /20, etc.)
+ - Class B and C are used for public purposes.
+ - Range of IP is from 1-255.
+ - A /32 CIDR represents a single IPv4 address with no host bits, commonly used for host routes. AWS does not allow /29 subnets; the smallest supported subnet size is /28 because AWS reserves 5 IPs per subnet.
+ - Subnets inside a VPC must not overlap, and each subnet’s CIDR (for example /24) limits how many IP addresses can be used, with AWS reserving 5 IPs per subnet for internal use. AWS reserves fixed IPs in each subnet—the first four and the last one—never random addresses. AWS does not allow /17 for a VPC because AWS requires a minimum /16 address space to support scalability and managed networking components.

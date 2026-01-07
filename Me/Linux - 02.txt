@@ -1,0 +1,40 @@
+- To differentiate between a file and a directory, check permissions by using 'll' command. Directories have 'dr' in the initials.
+ - drwxr-xr-x represents directory permissions
+ 
+ - d - directory
+ - r - read - 4 is the numeric value 
+ - w - write - 2 is the numeric value
+ - x - execute - 1 is the numeric value
+
+- -rw-r--r-- represents file permissions
+
+- The read, write and execute permissions are repeated  in 'drwxr-xr-x' because the first 'rwx' is for "Owner", the second would be for "Groups", the third would be for  "Others". IT represents what kind of permissions are allotted to each category. If there is a '-' instead of the permission then it means that specific permission has not been granted to that group, for example in the above directory permission 'r-x', Groups will only be able read and execute, they don't have write permission, same as Other users.
+
+- chmod           - used to change the permissions
+- chmod 777       - used to provide full access to all users. ( r=4, w=2, x=1, r+w+x=7)
+- cat /etc/passwd - get the complete list of users. (example : vboxuser:x:1000:1000:Viqaas:/home/vboxuser:/bin/bash)(vboxuser:x:UserId:groupId:group name: home directory: shell) 
+- chown user filename - used to change ownership of the file
+- id              - used to check the current user
+- su user         - used to switch user
+- sudo            - means super user do. It gives extra privileges to the user that is in sudoers files only.
+- useradd         - used to add a new user
+- passwd          - used to add password to a user
+- exit            - to exit shell
+- find            - used to find required data
+- find / -name filename - used to find a file
+- echo text > filename -  add the provided text to a file. It will also delete or overwrite the existing content. 
+- echo text >> filename - add the text to a file without overwriting the existing content.
+- head -3 filename - read the top three lines of a file.
+- tail -3 filename - read the bottom three lines of a file.
+- tail - f filename - It is to continuously monitor a given file.
+- find / -name *.extension - Used to find files with particular extension.
+- grep keyword alphabet - shows whether the given keyword exists in the given file.
+- grep -i keyword alphabet - shows whether the given keyword exists in the given file irrespective of it's case, upper or lower.
+
+- root user has the ultimate access. this user can do anything within the system. So we don't always have access to change to root user.
+- # is always used for comments for providing information only.
+- add a user in sudoers file by editing the sudoers file using 'vi' command as root user.
+- 'echo' command is used to display a message to the user while doing automation tasks.
+- ctrl+c is used to exit an command.
+- * always represents ALL in Linux.
+- 
