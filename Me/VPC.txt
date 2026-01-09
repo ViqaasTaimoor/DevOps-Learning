@@ -1,4 +1,4 @@
-VPC - Virtual Private Cloud. (AWS)
+VPC - Virtual Private Cloud. An Amazon VPC is your own isolated virtual network inside AWS where you control IP ranges, subnets, routing, and security.
 Vnet- Virtual Network. (Azure)
 
 - The private IP's provided to us in EC2 are dependent upon the CIDR.
@@ -19,11 +19,15 @@ Vnet- Virtual Network. (Azure)
  - NACL - Network Access Control List - Restricts access at subnet level. We can allow or deny the request. It will work based on rule number, the lower the rule number, the higher it's priority.
  - SG - Security Groups - Restricts access at instance level. By default every port number is denied by SG (to access, allow the port number in inbound rule).
 
+- Stateful: Allows return traffic automatically (SG)
+
+- Stateless: Every packet is evaluated independently (NACL)
+
 - A = Big, B = Medium, C = Small, D = Multicast, E = Experiment
  | Class | First Octet | Subnet Mask   | Hosts/Network | Usage          |
  | ----- | ----------- | ------------- | ------------- | -------------- |
  | A     | 1–126       | 255.0.0.0     | ~16M          | Large orgs     |
- | B     | 128–191     | 255.255.0.0   | ~65K          | Medium orgs    |
+ | B     | 127–191     | 255.255.0.0   | ~65K          | Medium orgs    |
  | C     | 192–223     | 255.255.255.0 | 254           | Small networks |
  | D     | 224–239     | N/A           | N/A           | Multicast      |
  | E     | 240–255     | N/A           | N/A           | Experimental   |
@@ -77,7 +81,24 @@ Vnet- Virtual Network. (Azure)
 
 - Amazon S3 - Amazon S3 is a cloud storage service used to store and retrieve files from anywhere over the internet - the bucket name must always be unique.
 
+- Amazon CloudWatch is a monitoring service that collects metrics, logs, and events from AWS resources and triggers alerts.
+
 - Amazon data firehose - Amazon Kinesis Data Firehose takes real-time data and automatically sends it to destinations like S3 or Redshift.
+
+- VPC Peering - It helps us to communicate with mutliple VPC's in the same/different region or a different AWS account. CIDR range should always differ. 
+ - VPC peering is a private network connection that allows two VPCs to communicate directly using private IP addresses.
+ - Billing will be charrged based on transfer of data.
+ - After creating a peering connection, just add the rule in routing table of both VPC's to allow the CIDR range as peering connection (copy from the VPC info) of both VPC's.
+ - n(n−1)/2 is used to calculate the amount of peering connections needed.
+
+- VPC Tansit Gateway- It is a central hub that lets many VPCs talk to each other through one common connection, instead of creating many separate links.​ VPC attachment will be charged and so will data processing.
+ - After creating a gateway and gateway attachments, input the CIDR addresses and internet gateways in the routing tables of every instance.
+
+- VPC endpoint - It allows private access to AWS services from a VPC without using the internet or a NAT gateway.
+
+- You can create an access key for your account and input them in aws configure command in amazon CLI. This way you can access your aws services in CLI.
+ - aws s3 ls - used to check the s3 buckets.
+ - aws s3 ls --profile=username - check s3 bucket of a specific profile.
 
 - Interview Points:
  - 127.x.x.x → Loopback (not Class A usable)
