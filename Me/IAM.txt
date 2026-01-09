@@ -1,0 +1,52 @@
+- IAM: Identity Access Management
+ - IAM identity --> identity can be a use, group, roles.
+
+- Policy: It defines the permissions of the IAM identity. 
+
+
+- Types of policies:
+
+- Identity Based policies:
+
+In Line Policy: An inline policy is a policy created for a single IAM identity (a user, group, or role). 
+In line policies maintain a strict one-to-one relationship between a policy and an identity. 
+They are deleted when you delete the identity.
+
+- Managed Policies:
+1) Aws Managed Policy
+2) Customer Managed Policy
+
+- AWS managed policies – Managed policies that are created and managed by AWS.
+Customer managed policies – Managed policies that you create and manage in your AWS 
+account. Customer managed policies provide more precise control over your policies 
+than AWS managed policies.
+
+- Resource-based policies:
+Are attached directly to resources and specify permissions for specific actions on the resource by some principals. 
+
+- IAM permissions boundaries:
+Define the maximum permissions for an IAM entity and are used as safeguards.
+
+- Access control lists(ACLs):
+Are attached to resources and control cross-account permissions for principals from other accounts. 
+
+- Organizations Service Control Policies(SCPs):
+Specify the maximum level of permissions for an organization’s accounts. These policies are used to limit the permissions that can be assigned within member accounts.
+
+- Session policies:
+Are advanced policies used during temporary sessions for roles or federated users.
+
+- Role:
+IAM role is an identity within your AWS account that has specific permissions. 
+It is similar to an IAM user, but is not associated with a specific person.
+
+- Types of Roles?
+ - Aws service Role: A service role is an IAM role that a service assumes to perform actions on your behalf.
+ - AWS account: Allow entities in other AWS accounts belonging to you or a 3rd party to perform actions in this account.
+ - Web identity: Allows users federated by the specified external web identity provider to assume this role to perform actions in this account.
+ - SAML 2.0 federation (Security Assertion Markup Language ): Allow users federated with SAML 2.0 from a corporate directory to perform actions in this account.
+ - Custom trust policy: Create a custom trust policy to enable others to perform actions in this account.
+
+- EC2:  
+- Snapshot - A snapshot is a point-in-time copy of an EBS volume. You cannot use it directly — when you “launch” from a snapshot, AWS first creates a new EBS volume from it.
+- EBS - Elastic Block Storage is the actual disk attached to an EC2 instance.
