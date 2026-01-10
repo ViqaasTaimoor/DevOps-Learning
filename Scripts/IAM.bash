@@ -3,37 +3,25 @@
 # Exit immediately if any command fails
 set -e
 
-echo "Starting IAM user creation script..."
-echo "This script will create an IAM user and attach VPC Full Access permissions."
+# Prompt for IAM username
+read -p "Enter IAM username: " user
 
-# -------------------------------
-# Variables
-# -------------------------------
-user="vpc-user"
+# Validate input
+if [ -z "$user" ]; then
+  echo "Error: Username cannot be empty"
+  exit 1
+fi
+
 policy="arn:aws:iam::aws:policy/AmazonVPCFullAccess"
 
-# -------------------------------
-# Create IAM User
-# -------------------------------
-echo "Step 1: Creating IAM user: $user"
+# Create IAM user
+echo "Creating IAM user: $user"
+aws iam create-user --user-name "$user"
 
-aws iam create-user --user-name $user
-
-echo "IAM user '$user' created successfully."
-
-# -------------------------------
-# Attach VPC Full Access Policy
-# -------------------------------
-echo "Step 2: Attaching VPC Full Access policy to user: $user"
-
+# Attach VPC Full Access policy
+echo "Attaching VPC Full Access policy"
 aws iam attach-user-policy \
-  --user-name $user \
-  --policy-arn $policy
+  --user-name "$user" \
+  --policy-arn "$policy"
 
-echo "VPC Full Access policy attached successfully."
-
-# -------------------------------
-# Completion Message
-# -------------------------------
-echo "Script completed successfully."
-echo "IAM user '$user' now has full access to VPC resources."
+echo "User '$user' created with VPC Full Access"
