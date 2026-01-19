@@ -1,0 +1,38 @@
+- s3 - Simple Storage Service.
+ - It is a Global Service. 
+ - Bucket is region specific.
+ - Used for fixed objects(files). Fixed means we can't edit the files in bucket, we have to download, make changes and upload.
+ - Bucket name should be unique globally.
+ - Bucket max size : Unlimited - You’ll never “fill” an S3 bucket — you’ll hit billing, performance, or management pain long before any size limit.
+ - Object (single file) max size: 5 TB
+ - Maximum single PUT upload: 5 GB
+ - Multipart upload range: 5 MB – 5 GB per part (up to 10,000 parts)
+
+- We have three different storages in AWS:
+ - EBS - Elastic Block Storage - Hard disk - We can't connect multiple ec2 to single EBS.
+ - s3  - Simple Storage Service - Drive Storage - We can transfer data from multiple ec2 to s3 from different regions as well.
+ - EFS - Elastic File System - Can be used across different ec2
+
+
+- A bucket policy is a JSON rule attached to an S3 bucket that says who can access it, what they can do, and from where.
+ - ACL is at object level while Bucket Policy is at Bucket level.
+
+- Whether an S3 object opens or downloads depends on its Content-Type and Content-Disposition metadata — not the bucket or URL.
+ - S3 stores a metadata field called Content-Type. If it’s something browsers can render like text/html, image/png, image/jpeg, application/pdf: Browser displays it inline. If it’s unknown or generic like binary/octet-stream, application/zip, application/x-msdownload: Browser downloads it.
+ - Content-Disposition header: This explicitly tells the browser what to do. Content-Disposition: inline → open in browser, Content-Disposition: attachment → force download.
+
+- Re-uploading the same object key overwrites the object and its metadata, unless bucket versioning is enabled.
+- We can access previous versions of the file, by going to versions tab in object details.
+
+- Amazon S3 storage classes: Main purpose for changing class is for cost reduction.
+ - S3 Standard – frequently accessed data, low latency. Examples of use: websites, APIs, active app data.
+ - S3 Intelligent-Tiering – automatic cost optimization based on access. Examples for use: user uploads, shared documents, mixed workloads.
+ - S3 Standard-IA – Use when data is rarely accessed but must be instantly available. Examples for use: backups, DR copies, long-term reports.
+ - S3 One Zone-IA – Used when infrequent access, stored in a single AZ. Examples for use: secondary backups, non-critical logs.
+ - S3 Glacier Instant Retrieval – Use for archived data that still needs millisecond access. Examples for use: medical images, compliance records (rarely read).
+ - S3 Glacier Flexible Retrieval – Use for archives where minutes–hours retrieval is fine. Examples for use: audit logs, old backups.
+ - S3 Glacier Deep Archive – Use for long-term retention where hours wait is acceptable. Examples for use: legal records, 7–10 year compliance data.
+
+- We can edit the classes in Lifecycle rules tab.
+
+- We can host static websites in s3 buckets by going to properties tab. Create an index and eroor .html files and uplaod, then access the url.
