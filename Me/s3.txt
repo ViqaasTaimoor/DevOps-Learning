@@ -7,6 +7,7 @@
  - Object (single file) max size: 5 TB
  - Maximum single PUT upload: 5 GB
  - Multipart upload range: 5 MB – 5 GB per part (up to 10,000 parts)
+ - Used to store VPC flow-logs, host a static website or data related to the application.
 
 - We have three different storages in AWS:
  - EBS - Elastic Block Storage - Hard disk - We can't connect multiple ec2 to single EBS.
@@ -35,4 +36,27 @@
 
 - We can edit the classes in Lifecycle rules tab.
 
-- We can host static websites in s3 buckets by going to properties tab. Create an index and eroor .html files and uplaod, then access the url.
+- We can host static websites in s3 buckets by going to properties tab. Create an index and error .html files and upload, then access the url. http - 80, https - 443.
+ - s3 Bucket name should be same as the domain name you are hosting.
+
+- AWS ACM - Amazon Certificate Manager. It is a fully managed AWS service that provisions, manages, and automatically renews SSL (Secure Sockets Layer) and TLS (Transport Layer Security) certificates to secure applications on AWS without manual certificate handling.
+ - SSL (Secure Sockets Layer) is a security protocol that encrypts data between a client and a server to ensure secure communication.
+ - TLS (Transport Layer Security) is the modern, more secure successor to SSL that provides encrypted and authenticated communication over networks.
+
+- User --> r53 --> CloudFront [ACM] --> s3 Bucket.
+
+- Amazon Route 53 is a highly available and scalable DNS (Domain Name System) web service that routes user traffic to AWS resources or external endpoints based on routing policies. 53 is the port number.
+ - DNS is a hierarchical naming system that translates human-readable domain names into IP addresses so computers can locate resources on a network.
+ - Create a hosted zone with your domain name.
+ - Then copy the value/routed to, and paste in the name-servers in manage domain tab on your domain site (godaddy).
+ - A Record – Maps a domain name to an IPv4 address.
+ - AAAA Record – Maps a domain name to an IPv6 address.
+ - CNAME Record – Maps one domain name to another domain name.
+ - Alias Record – AWS-specific record that points to AWS resources (like ELB, CloudFront) without extra cost.
+ - MX Record – Routes emails to mail servers.
+ - TXT Record – Stores text information, often used for verification (SPF, DKIM).
+ - NS Record – Specifies the name servers for the domain.
+ - SOA Record – Contains administrative details about the domain (auto-created).
+
+- CloudFront is AWS’s global content delivery service that stores and serves website content from locations closer to users, making websites load faster and more reliably.
+ - Edge Locations are worldwide data centers used by AWS to store and serve content closer to users, so websites and apps load faster with less delay.
