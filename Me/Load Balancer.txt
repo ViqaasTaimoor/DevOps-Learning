@@ -6,10 +6,13 @@
 
  - Application Load Balancer - ALB is used for web apps and can route traffic based on URL and host name. Ex: Websites.
   - Protocols: HTTP, HTTPS, WebSocket. ALB handles web traffic.
+  - Algorithm: Least Outstanding Requests (smart round-robin). ALB sends requests to the least busy server.
+  - A rule decides where a request should be sent. ALB works on layer 7 of OSI model.
  
  - Network Load Balancer - NLB is for extremely high traffic where speed matters. Ex: Game Servers.
   - Protocols: TCP, UDP, TLS. NLB handles raw network traffic (very fast).
-  - Algorithm: Flow Hash (5-tuple hash). NLB uses a hash to decide which server handles your connection
+  - Algorithm: Flow Hash (5-tuple hash). NLB uses a hash to decide which server handles your connection. NLB works on layer 4 of OSI model. We can also configure an Elastic IP.
+  - TCP is connection-oriented and reliable, while UDP is connectionless and faster but does not guarantee delivery.
 
  - Gateway Load Balancer - GWLB is for putting security in the middle of traffic. Ex: Firewall.
   - Protocols: GENEVE (port 6081). GWLB is for security traffic.
