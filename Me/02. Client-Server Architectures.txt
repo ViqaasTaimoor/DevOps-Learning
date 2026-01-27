@@ -1,0 +1,62 @@
+- Client-Server Architectures are how the computer networks are structured. They are of four types :-
+  - 1-Tier Architecture
+  - 2-Tier Architecture
+  - 3-Tier Architecture
+  - N-Tier Architecture
+
+- Types of Environments :
+ - Development Environment
+ - Test Environment
+ - Production Environment (Live Environment)
+
+- Client : Which requests a resource. (browser)
+- Server : Which responds to that request.
+
+- If specific resources are not available, then the website may hang, crash or become unreachable.
+
+- Server : Hardware----> OS----> App Layer/Data Layer.
+
+- 1-Tier Architecture : It is used only in Development Environment. We use it when we want to deploy on our local machine, eg., laptop.
+
+- 2-Tier Architecture : The client(browser) will send request to the server. Application and database are deployed in the same machine. It is a public server, hence poses security risks.
+ - If specific resources are not available, then the website may hang, crash or become unreachable.
+
+- 1-Tier or 2-Tier architectures are seen in Dev or testing environments, not recommended for production environment.
+
+- 3-Tier architectures are recommended for production environments.
+ - has three layers:- Client, Application(Business logic) and Database layer.
+ - Client Layer :- Browser.
+ - Application Server :- The server which has the application hosted. It also consists the code so should be hosted on a private network for security reasons. In order for the client to access the data we need to introduce a new layer called Webserver, which will make it N-Tier Architecture. 
+ - Database Server :- The server which has the DB/database hosted/stored. Must be hosted on a private network for security reasons.
+
+- N-Tier Architectures :- Any number of layers can be added.
+ - Webserver :- Used for static deployment. It is hosted on public network and has no code, only configurations for connectivity. httpd(Apache), nginx, etc,.
+ - App servers :- Used for dynamic content deployment. Tomcat (Apache), jboss, weblogic.
+
+- Browser----> Webserver-----> Application Layer-----> Database Layer. 
+- Browser (x3)----> Firewall-----> Load Balancer-----> Webserver-----> Application Layer-----> Database Layer.
+ - Load Balancer : Helps distribute the load coming from multiple clients between multiple Webservers. It is public
+
+- Each server has IP address and hostname which helps all three layers to communicate with each other.
+ 
+- IP Address :- Internet Protocol Address.
+  - IPv4 : 192.168.0.0
+  - IPv6 : 2001:db8:85a3::8a2e:370:7334
+- Hostname : Name of the server.
+
+  
+   SOA or Start of Authority ( has all the IP information)
+         ^   
+   Name Server (identifies the hostname using Domain)  
+         ^
+   Top Level Domain (.com)(checks domain name provided by Rootname Server) 
+         ^   
+   ROOTname Server
+         ^
+   Local DNS ( if the IP for hostname found, then it will send it to back to browser, if not then it send it forward)
+         ^ 
+- Browser/Laptop----> hostname/domain name       ( DNS : Domain Name Server, It keeps track of hostname/IP, converts hostname to IP and vice versa)
+                       Netflix.com
+- The above activities are entirely handled by the internet within fraction of seconds, so we don't worry about this.
+
+- nslookup command helps fetch IP address/Domain name (eg., nslookup fb.com)

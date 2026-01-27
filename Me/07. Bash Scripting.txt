@@ -1,0 +1,68 @@
+Bash Scripting : Script is a set of commands which helps us to automate the process. 
+- Connect to the SSH client.
+- Create a test script. (vi test)
+- #!/bin/bash - firt line in the script should be this. (/bin/bash is the shell).
+- give a few commands. (free -m, df, ps -ef, netstat -na)
+- give execute permissions to your test script.
+- run using ./scriptname or bash scriptname.(bash will ignore permissions).
+
+- Shell is the command Interpreter. It is the brain that understands the command. 
+- Kernel is the core of the Operating System. Programs can never talk to the hardware directly, Kernel does it.
+- Terminal takes input, shell interprets it, kernel executes it using processes, and output is returned via stdout or stderr.
+- Shell ---> Kernel ---> Hardware ---> Kernel ---> Shell.
+- Shell and Kernel together are called as Operating System.
+- Application and Shell together are called Software.
+- cat /etc/shells - to check the list of shells available. 
+
+- few things to remember while writing scripts:
+ - naming conventions
+ - permissions
+ - script sequence
+
+- Absolute Path : A path that starts from the root directory (/) and shows the full location of a file or directory.
+ - It is independent of your current location.
+ - It works no matter where you are.
+- Relative Path : A path that is relative to your current working directory.
+ - It depends on where you are now.
+- An absolute path starts from root and always points to the same location, while a relative path depends on the current working directory.
+
+- Script Naming Conventions :
+ - Always create a directory to store scripts.
+ - Script name should identify the function.
+ - Script should end with .shell (If multiple shells are used) ex: .sh, .bash.
+
+- Script File Permissions :
+ - All scripts to be executed must have execution permission enabled.
+
+- Script Format : 
+ - Define Shell (#! /bin/bash)(#! --> she bang)
+ - Comments (#comments)
+ - Define variables ( e.g name = Viqaas)
+ - Commands (cat, rm, free -m etc.,)
+ - Statements (if, while, for etc)
+
+- use $variable to call the variable (eg: echo $a)
+- The sequence for any script is top to bottom, the commands will be executed from top to bottom.
+- To jump to a specific line in vi editor use :number of line.
+- Make sure to add a secondary command to a real time monitoring command so that the rest of the commands in a script are executed, because it won't execute the other commands until the real time command is exited. ( ex: top | grep -10)
+- A variable in Bash is used to store data temporarily in memory and refer to it by name during script execution.
+- A variable is a value that can change, depending on conditions or information passed to the program.
+- The read command in Bash is used to take input from the user (stdin) and store it into variable(s).
+- in echo : `command` → run command
+ -          $variable → use variable value
+- ┬ ┬ ┬ ┬ ┬
+  │ │ │ │ │                            - cronjob explanation. (*/1 * * * * /path/to/script.sh >> /tmp/cron_debug.log 2>&1)(an example to log the output, always use)
+  │ │ │ │ └─ Day of week (any)
+  │ │ │ └─── Month (4 = April)
+  │ │ └───── Day of month (5)
+  │ └─────── Hour (0 = midnight)
+  └───────── Minute (0)
+
+- | Service        | Default Port | Why                          |
+  |----------------|--------------|------------------------------|
+  | HTTP           | 80           | Standard web traffic         |
+  | HTTPS          | 443          | Encrypted web traffic        |
+  | Nginx          | 80 / 443     | Acts as web server           |
+  | httpd (Apache) | 80 / 443     | Traditional web server       |
+  | Tomcat         | 8080         | Avoids conflict with port 80 |
+

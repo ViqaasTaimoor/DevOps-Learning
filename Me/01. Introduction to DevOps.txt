@@ -1,0 +1,58 @@
+- Slack, teams,  skype, etc,. - For communication
+
+- Jira - ticketing tool, helps team to track your progress
+
+- Always make sure to update the ticket status.
+
+- Tools that will  be taught :-
+- Linux
+- Git - used to store the code
+- GitHub
+- Jenkins - used for integrating
+- Maven - take codes from different repositories to build a complete application.
+- SonarQube
+- Nexus
+- Ansible
+- Docker
+- Terraform
+- Kubernetes
+- AWS Cloud
+
+- Release :- releasing a new version for an application or a new application.
+
+- Waterfall method :- development happens in step by step manner.
+ - Requirement analysis
+  - Design
+   - Development
+    - Testing
+     - Maintenance ( done by us)
+ - If any problem arises in any of the stages, the entire process restarts.
+ - No communication between the client and the developer causing major delays or inconsistencies, major drawback.
+
+- Agile Method-The client is provided with a prototype to evaluate first. Then the client provides feedback and changes will be made.
+ - Continuous communication between client and developer.
+ - entire process is broken down into small blocks called sprints, each sprint is of 14 days.
+ - progress will be shown to client in a review meeting after a sprint, if any changes are requested then they are implemented in sprint 2, so on...
+ - Daily scrum meetings will be held, we too are required to attend these.
+ - Client requirements are better understood, product is delivered much faster.
+ - Product is tested only on developer computers and not on production system.
+ - no communication between developer and operations team.
+
+- DevOps- Development Operations
+ - helps make the software development process easy by integrating all the above mentioned tools
+ - focused mostly on the operations part of the cycle.
+ - Evolution of Agile methodology.
+ - addresses the gap between developers and operations team.
+ - Operations will monitor the application and provide feedback to the developer.
+ - Software deployment and delivery is divided into 8 phases.
+  - Plan
+  - Code (d)
+  - Build (d)
+  - Testing (d)
+  - Integrate (o)
+  - Deploy (o)                        * d = development team
+  - Operate (o)                       * o = operations team
+  - Monitor (o)
+ - able to identify or address the issues in the early stages which helps reduce cost, resources and even faster deployment of applications.                  
+ 
+ 

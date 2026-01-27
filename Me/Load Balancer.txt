@@ -1,0 +1,20 @@
+- Elastic Load Balancer: ELB distributes incoming traffic across multiple EC2 instances and routes only to healthy ones.
+ 
+ - Classic Load Balancer - CLB is the old load balancer, kept only for backward compatibility.New systems should NOT use it.
+  - Protocols: HTTP(80), HTTPS(443), TCP(80) & SSL(443).CLB supports both web and network, but it’s old.
+  - Algorithm : Round Robin. CLB sends traffic to servers one by one in order.
+
+ - Application Load Balancer - ALB is used for web apps and can route traffic based on URL and host name. Ex: Websites.
+  - Protocols: HTTP, HTTPS, WebSocket. ALB handles web traffic.
+ 
+ - Network Load Balancer - NLB is for extremely high traffic where speed matters. Ex: Game Servers.
+  - Protocols: TCP, UDP, TLS. NLB handles raw network traffic (very fast).
+  - Algorithm: Flow Hash (5-tuple hash). NLB uses a hash to decide which server handles your connection
+
+ - Gateway Load Balancer - GWLB is for putting security in the middle of traffic. Ex: Firewall.
+  - Protocols: GENEVE (port 6081). GWLB is for security traffic.
+  - Algorithm: Flow Hash. GWLB hashes traffic flows and sends them to security appliances.
+
+- ALB works at application layer and supports content-based routing, while NLB works at network layer and is optimized for ultra-high performance and low latency.
+ - A = Application = ALB = Web
+ - N = Network = NLB = Speed

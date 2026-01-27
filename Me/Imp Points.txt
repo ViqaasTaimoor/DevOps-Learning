@@ -1,0 +1,34 @@
+- A core dump is a snapshot of a program’s memory at the moment it crashes or quits abnormally. (A photograph of the program’s brain when it died)
+- A thread dump shows what every thread in a running program is doing at that moment. (A status report of all workers in a factory)
+- Ansible is used for pre-patching and post-patching activities. Jenkins can trigger the process, Git stores the playbooks, and in AWS environments, SSM Patch Manager performs the actual patching.
+- Client–server architecture is a model where clients request services and servers provide them. Common types include 1-tier, 2-tier, 3-tier, and N-tier architectures.
+- An inode or indexnode is a unique identifier which stores metadata about a file, not its name.
+- Hard links share the inode; soft links point to the path.
+- rm -rf / - As a normal user, it fails due to permissions and safety checks. As root with safeguards disabled, it would wipe the system.
+- ps aux and ps-ef show similar process information but use different formats: ps aux is BSD style with resource details, ps -ef is System V style with parent-child relationships.
+- Login shells run login profile files; non-login shells run .bashrc.
+- `` and $() run a command and replace it with it's output. They do the same thing, but $( ) is modern, readable, and safer than backticks.
+- source runs a script in the current shell, ./script runs it in a subshell
+- /var/log/syslog is used on Debian-based systems, /var/log/messages on RHEL-based systems.
+
+- What is the difference between these two commands?
+cat file.txt | grep error
+grep error file.txt
+Ans. They produce the same output, but grep file.txt is more efficient because it avoids an extra process.
+
+- CloudFront = Deliver
+ - It’s a CDN. It delivers your website/videos/files fast to users from nearby locations. (Used for performance)
+
+- CloudTrail = Track
+ - It logs who did what in your AWS account. Example: who created an EC2, who deleted an S3 bucket. (Used for auditing & security)
+
+- CloudWatch = Watch
+ - It monitors resources and apps. CPU usage, memory, errors, alarms, logs. (Used for monitoring & alerts).
+
+- Simple Difference:
+ - CloudFront → speed up content delivery
+ - CloudTrail → record AWS API activity
+ - CloudWatch → monitor & alert on system health
+
+- CloudWatch is used for monitoring metrics and logs of resources, while CloudTrail is used for auditing API activity in AWS.
+ - CloudWatch monitors how resources are running, while CloudTrail logs what actions were performed in AWS.

@@ -1,0 +1,66 @@
+- Git and GitHub:
+- Git is a distributed version control system used to track changes in files—mainly source code. Response time is much faster.
+- GitHub is a cloud-based platform that hosts Git repositories. It is a central repository to store source code. (GitLab, bitbucket are some alternatives).
+| Git                | GitHub             |
+| ------------------ | ------------------ |
+| Tool               | Platform           |
+| Runs locally       | Runs online        |
+| Tracks changes     | Hosts repositories |
+| Works offline      | Needs internet     |
+| Command-line based | Web interface      |
+
+- Distributed Version Control. - Git
+- Centralized Version Control. - SVN
+- Centralized VCS has one central repository, while Distributed VCS gives every developer a complete copy of the repository and its history.
+- | Feature           | Centralized          | Distributed                  |
+  | ----------------- | -------------------- | ---------------------------- |
+  | Repository copies | One                  | Multiple (each user has one) |
+  | Internet needed   | Always               | Only for sharing             |
+  | Speed             | Slower               | Faster                       |
+  | Failure risk      | High (single server) | Low                          |
+  | Branching         | Hard                 | Easy                         |
+  | Offline work      | No                   |  Yes                         | 
+
+- git init   -  make a .git repository.
+- git status - Show working tree status.
+- git config --list - get complete details.
+- git config --global user.name " "- to register username.
+- git config --global user.email " " - to register email.
+- git add filename  - to track files.
+- git add . - to track all files.
+- git commit -m "relevant message" - to create a snapshot of the tracked files. (b112f36 is the example of commit id, used to reverse changes).'
+- git log - to check logs, also useful to pull up commit id's.
+- git remote -v - shows which remote repositories your local Git repo is connected to, and the URLs used for fetching and pushing.
+- git remote add origin url - to add origin (fetch the repo url from GitHub by clicking on the green code button).
+- git clone - helps to download all the data from central repository to local machine.
+- git clone -b branchname url - to download only a specific branch.
+- git pull - helps to download all the changes made in the central repository.
+- git revert commit_id - to revert changes.
+- git reset - resets the changes before committing.
+- git branch --list - branch list.
+- git branch nameofthebranch - used to create a new branch.
+- git checkout branchname - used to change branches.
+- git merge targetbranchname - to merge branches.
+- git cherry-pick commitid - to copy specific commits from a branch.
+- git commit --amend - to change the commit message, not recommended.
+- git stash - used to push the added files to stash memory before commit.
+- git stash list - to see the list of files in stash memory.
+- git stash pop - to get files back from stash memory.
+- vi  .gitignore - paste filenames in .gitignore to make git ignore the files, before committing. for security.
+- git rebase -i HEAD~n - used to combine or play around with commits, always be careful.
+
+- If someone pushed a file in the repository and you do not have it locally, then if you push without fetching the data then the push fails.
+- Use Fork option to copy repositories to your account from public repos.
+
+- Git Flow Branching Strategies :
+ - Release - used for production environment.
+ - Develop - used for development/staging environment.
+ - Feature - used for next updates.
+ - Hotfix - used to fix bugs of production.
+ - Master/main - is used as a copy for release branch.
+
+- Whenever a new branch is created then the contents of the present are copied to it. Only when creating the branch, after that any changes made are for their respective branches.
+
+- PR --> Pull Request.
+- Pull Request is used to merge two different branches. git merger is only for local while pull request is on GUI.
+- Merge conflict can be seen when two identical files with same content are trying to merge. to solve just edit changes, add and commit.

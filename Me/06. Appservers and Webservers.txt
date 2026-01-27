@@ -1,0 +1,66 @@
+- Webservers: Apache (httpd), Nginx.
+ - Webservers will help us manage/deploy static websites.
+ - A web server is software that receives HTTP requests and serves web content to clients (browsers)
+ - A static website is hosted on a web server, which simply serves pre-built files without any backend processing.
+
+- Static Websites : A static website serves fixed content where pages are delivered exactly as stored, without server-side processing.
+ -Content does not change unless the files (HTML/CSS/JS) are manually updated.
+ -No database or backend logic is involved.
+ -Fast, secure, and low-cost compared to dynamic websites.
+
+- A load balancer distributes incoming traffic across multiple servers to improve performance, availability, and reliability.
+
+- Difference between Apache and Nginx ?
+ - Nginx is faster than Apache in terms of hosting or serving the content.
+ - Nginx can be used as load balancer and no extra configuration is required.
+ - Apache can also be used as load balancer but extra configurations are required.
+ - Nginx is a high-performance, event-driven web server best for reverse proxy and load balancing, while Apache is process-based and more flexible for traditional web hosting.
+
+- Apache Installation : 
+ - yum install httpd
+ - systemctl start httppd
+ - systemctl status httpd  -l
+ - ps -ef | grep httpd
+
+- find / -name httpd.conf - for checking the httpd path.
+- /etc/httpd/conf/httpd.conf - the default path
+- Edit port number in the httpd.conf file from default 80 to your specified port number. Always take a backup first. (either copy conf file to another location or just rename it to .conf.backup and copy the entire data, paste it in a new .conf file)
+
+- To create a static website :
+ - cd /var/www/html/ (it is the default location for apache httpd, only deploy here)
+ - Create a file called index.html to display a simple message.
+ - <h1> your message </h1> (a basic html line).
+ - check the webpage for your message.
+
+- find / -name access_log - to find the log files path.
+- /var/log/httpd/access_log - the default path for log files.
+- /var/log/httpd/error_log - to check errors.
+
+- We can run any number of Apache or Nginx servers on our instance/machine by hosting them on different port numbers.
+
+- /usr/share/nginx/html/ - It is the default path for nginx html files.
+- /etc/nginx/nginx.conf - default path for conf file, also can change port number.
+
+
+- App servers: Apache Tomcat
+ - An application server (app server) is software that runs your application’s backend logic and helps it talk to users, databases, and other services.
+ - It is used to serve dynamic content.
+ - It is a java application, so java is a pre-requisite.
+ - the default filename of tomcat logs is Catalina.out and default port number is 8080.
+
+- If no browser is available, then use curl localhost:ipaddress to check tif particular ip address is working.
+
+- try to use /opt/ directory to download, since it is optional and good for testing.
+
+- if systemctl is not working and you need to start apache, then go to /opt/apache tomcat/bin (example, just put the path to the installed folder of apache or any other software)
+ - then use bash and startup.sh
+ - bash scriptname or ./scriptname are used to start scripts.
+
+-Deploying a sample application :
+ - go to webapps directory (/opt/tomcat/webapps)
+ - copy sample.war link from internet and use it with wget command
+
+- export TMOUT=0, will keep the current session no matter the idle time.
+ 
+
+ 

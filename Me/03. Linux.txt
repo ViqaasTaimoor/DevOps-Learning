@@ -1,0 +1,52 @@
+- Linux is used for multiple reasons : 
+ - Multiple users can login at the same time.
+ - Open Source OS
+ - eg, Ubuntu, RHEL (Redhat Enterprise Linux), Amazon Linux, Centos, SUSE
+
+- GUI - Graphical User Interface
+- CLI - Command Line Interface 
+
+- Kernel - It is the heart of any operating system. It has pre defined programs for user friendly behaviour.
+
+- Linux Commands :
+ - echo $0 : Shell
+ - cd      : change directory
+ - cd /    : root directory
+ - cd ~    : home directory
+ - cd ..   : go back one step in the directory
+ - cd ../..: go back two steps in the directory
+ - ls      : list of files
+ - ll      : long detailed file list
+ - ls -ltr : list of most recently modified files
+ - mkdir   : create new directory/folder/path
+ - mv      : move/rename/hide/unhide
+ - history : history of the commands used
+ - date    : date
+ - touch   : create a new file inside a folder with 0 size
+ - cp -r   : copy
+ - vi      : add content to a file
+ - :wq!    : save and exit
+ - cat     : show content
+ - rm	   : remove a file
+ - rm -r   : remove a folder and its contents
+ - rm -f   : force delete (ignore warnings)
+ - rm -rf  : recursive + force → delete EVERYTHING you target 
+
+- Always use '_' instead of 'space' while using commands.
+
+- to hide an existing file use 'mv' and then add a '.' in front of the name.
+ - Ex: mv Azure_Wolf .Azure_Wolf(to hide)    mv .Azure_Wolf Azure_Wolf(to unhide)
+
+- to move a file from one directory to another. Ex: mv Azure_Wolf /home/vboxuser/Desktop
+- to copy a file from one directory to another. Ex: cp -r  Azure_Wolf /home/vboxuser/Desktop
+
+- Linux has three different editors : VI, VIM, NANO
+
+- to add content to an empty file use 'vi' command and then 'I' to start inserting content. If you create extra lines, then use 'dd' after going to that line to delete it. Then use esc button once and then colon button to start typing commands and use ':wq!' to save and exit.
+- Use 'vi filename' to create a file and directly start editing.
+
+- 'wc' is for word count. Ex: If a file called World has Hello World in it and i used the 'wc' command. then it will show '1 2 12'.
+   - 1 : no. of lines
+   - 2 : no. of characters
+   - 12 : size of the file
+- to find a word inside the vi editor, use esc and then /word.
