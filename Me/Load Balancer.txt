@@ -1,6 +1,6 @@
 - Elastic Load Balancer: ELB distributes incoming traffic across multiple EC2 instances and routes only to healthy ones.
  
- - Classic Load Balancer - CLB is the old load balancer, kept only for backward compatibility.New systems should NOT use it.
+ - Classic Load Balancer - CLB is the old load balancer, kept only for backward compatibility. New systems should NOT use it.
   - Protocols: HTTP(80), HTTPS(443), TCP(80) & SSL(443).CLB supports both web and network, but it’s old.
   - Algorithm : Round Robin. CLB sends traffic to servers one by one in order.
 
@@ -21,3 +21,7 @@
 - ALB works at application layer and supports content-based routing, while NLB works at network layer and is optimized for ultra-high performance and low latency.
  - A = Application = ALB = Web
  - N = Network = NLB = Speed
+
+- A target group defines the backend targets and health checks used by a load balancer to route traffic.
+- A listener defines the port and protocol on which the load balancer accepts traffic.
+- Draining allows in-flight requests to complete before an instance is removed from a load balancer.
