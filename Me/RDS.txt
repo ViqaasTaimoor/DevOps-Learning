@@ -1,49 +1,43 @@
-# RDS Backup and Restore
+RDS Backup and Restore
 
 =======================
+Key Terminologies in Backup and Restore
+1) RPO – Recovery Point Objective
 
-## Key Terminologies in Backup and Restore
+Definition:
+RPO is the maximum acceptable data loss measured in time.
 
-### 1) RPO – Recovery Point Objective
+Explanation:
+It is the time between the **last successful backup** and the **time of failure**.
+ Example:
+  Backup taken at 6:00 AM
+  Failure occurred at 7:00 AM
+  ➝ RPO = 1 hour
+  ➝ We lose 1 hour of data.
 
-**Definition:**
-RPO is the **maximum acceptable data loss** measured in time.
+Important points:
 
-**Explanation:**
-
-* It is the time between the **last successful backup** and the **time of failure**.
-* Example:
-  Backup taken at **6:00 AM**
-  Failure occurred at **7:00 AM**
-  ➝ **RPO = 1 hour**
-  ➝ We lose **1 hour of data**.
-
-**Important points:**
-
-1. Represents the **amount of data loss** a business can tolerate.
-2. RPO is **defined by the business**.
+1. Represents the amount of data loss a business can tolerate.
+2. RPO is defined by the business.
 3. RPO influences:
 
    * Backup frequency
    * Technical design
    * Disaster recovery strategy
 
----
+2) RTO – Recovery Time Objective
 
-### 2) RTO – Recovery Time Objective
+Definition:
+RTO is the maximum acceptable time required to restore service after a failure.
 
-**Definition:**
-RTO is the **maximum acceptable time** required to restore service after a failure.
+Explanation:
+It is the time between the disaster event and full recovery.
+ Example:
+  Disaster happened at 6:00 AM
+  Database restored by 6:30 AM
+  ➝ RTO = 30 minutes
 
-**Explanation:**
-
-* It is the time between the **disaster event** and **full recovery**.
-* Example:
-  Disaster happened at **6:00 AM**
-  Database restored by **6:30 AM**
-  ➝ **RTO = 30 minutes**
-
-**Important points:**
+Important points:
 
 1. Influenced by:
 
@@ -57,16 +51,14 @@ RTO is the **maximum acceptable time** required to restore service after a failu
    * Automation
    * High availability design
 
----
-
 # RDS Backups
 
 ============
 
 ### 1) Snapshot Behavior
 
-* First snapshot is a **full snapshot** of the used data.
-* All subsequent snapshots are **incremental**:
+* First snapshot is a full snapshot of the used data.
+* All subsequent snapshots are incremental:
 
   * Only changed data blocks are captured.
 
@@ -76,9 +68,9 @@ RTO is the **maximum acceptable time** required to restore service after a failu
 
 * Manual snapshots:
 
-  * Are **retained indefinitely**.
+  * Are retained indefinitely.
   * Remain even after DB instance is deleted.
-* They must be **deleted manually** by the user.
+  * They must be deleted manually by the user.
 
 ---
 
@@ -95,7 +87,7 @@ RTO is the **maximum acceptable time** required to restore service after a failu
 ### 4) Backup Retention
 
 * Automated backup retention can be set from:
-  **0 to 35 days**
+  0 to 35 days
 * If retention = 0 → backups are disabled.
 
 ---
@@ -104,7 +96,7 @@ RTO is the **maximum acceptable time** required to restore service after a failu
 
 * When you delete an RDS DB:
 
-  * You can choose to take a **final snapshot**.
+  * You can choose to take a final snapshot.
   * Automated backups are deleted based on retention period.
   * Manual snapshots remain until you delete them.
 

@@ -114,7 +114,7 @@ SELECT * FROM table1;
 RDS Multi Az (High-Availability):
 =================================
 Multi Az option can be enabled on rds instance and it will create a replica/standby db of original db
-in anaother availability zone.
+in another availability zone.
 The ebs volume attached for standby db will be in the created in the same region.
 RDS access only via database CNAME. so we cannot access standy db for any reason via RDS.
 Standby replica cannot be used as extra capacity.
