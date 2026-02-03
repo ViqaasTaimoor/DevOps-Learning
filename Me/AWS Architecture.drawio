@@ -148,6 +148,27 @@
             <mxPoint x="810" y="660" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Web Tier" vertex="1">
+          <mxGeometry height="44" width="100" x="860" y="756" as="geometry" />
+        </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Application Tier" vertex="1">
+          <mxGeometry height="44" width="100" x="1130" y="756" as="geometry" />
+        </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Database Tier" vertex="1">
+          <mxGeometry height="44" width="100" x="1405" y="756" as="geometry" />
+        </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;direction=south;gradientColor=default;fillColor=none;dashed=1;" value="" vertex="1">
+          <mxGeometry height="610" width="155" x="840" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Auto-Scaling Group" vertex="1">
+          <mxGeometry height="30" width="140" x="840" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;direction=south;gradientColor=default;fillColor=none;dashed=1;" value="" vertex="1">
+          <mxGeometry height="610" width="155" x="1090" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="S4Ghamp-6hMKLmVpOXEj-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Auto-Scaling Group" vertex="1">
+          <mxGeometry height="30" width="140" x="1090" y="120" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
