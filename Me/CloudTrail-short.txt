@@ -1,0 +1,166 @@
+WHAT IS CLOUDTRAIL?
+
+AWS CloudTrail records who did what, where, and when in your AWS account.
+
+It logs API activity from:
+
+AWS Management Console
+
+AWS CLI
+
+SDKs
+
+AWS services acting on your behalf
+
+Think: audit logging + security visibility for AWS.
+
+WHAT CLOUDTRAIL LOGS
+
+Each event tells you:
+
+Who: IAM user, role, assumed role, AWS service
+
+What: API action (RunInstances, PutObject, etc.)
+
+When: timestamp
+
+Where: region and source IP
+
+Result: success or failure
+
+Request and response details
+
+Log format: JSON
+
+TYPES OF CLOUDTRAIL EVENTS (VERY COMMON INTERVIEW QUESTION)
+
+MANAGEMENT EVENTS (DEFAULT)
+Control plane actions:
+
+IAM changes
+
+EC2 start/stop
+
+S3 bucket policy updates
+
+VPC changes
+
+Enabled by default
+Can log read-only, write-only, or all events
+
+DATA EVENTS (NOT DEFAULT)
+High-volume, resource-level activity:
+
+S3 object access (GetObject, PutObject)
+
+Lambda function invokes
+
+DynamoDB item-level operations
+
+Must be explicitly enabled
+Costs extra (important to mention)
+
+INSIGHTS EVENTS
+Detects unusual behavior patterns:
+
+Sudden spikes in API calls
+
+Abnormal IAM usage
+
+Used to detect compromised credentials
+
+TRAILS AND STORAGE
+
+A trail defines:
+
+Which events are logged
+
+Which regions
+
+Where logs are delivered
+
+Logs can go to:
+
+S3 (long-term storage, forensics, compliance)
+
+CloudWatch Logs (real-time alerts)
+
+MULTI-REGION VS SINGLE-REGION TRAILS
+
+Single-region trail:
+
+Logs activity in one region only
+
+Multi-region trail (BEST PRACTICE):
+
+Captures activity in all regions
+
+Detects attackers creating resources in new regions
+
+Interview line:
+“Always enable a multi-region CloudTrail for security visibility.”
+
+CLOUDTRAIL VS CLOUDWATCH
+
+CloudTrail:
+
+Purpose: audit and governance
+
+Logs: AWS API activity
+
+Answers: who did what
+
+Alerts: via CloudWatch
+
+CloudWatch:
+
+Purpose: monitoring and metrics
+
+Logs: application and system logs
+
+Alerts: native
+
+Easy summary:
+CloudTrail records. CloudWatch reacts.
+
+SECURITY AND COMPLIANCE USE CASES
+
+Incident response
+
+IAM change auditing
+
+PCI, SOC, HIPAA compliance
+
+Detecting unauthorized access
+
+Post-breach forensics
+
+RETENTION AND ENCRYPTION
+
+Logs encrypted at rest in S3
+
+Can use KMS customer-managed keys
+
+Log file integrity validation (hashing)
+
+COMMON INTERVIEW GOTCHAS
+
+CloudTrail is NOT real-time by default (there is a delay)
+
+Data events cost money
+
+Disabling CloudTrail is itself logged
+
+One trail can log multiple accounts using AWS Organizations
+
+SAMPLE INTERVIEW ANSWERS
+
+Q: How would you detect suspicious IAM activity?
+A: Enable CloudTrail and CloudTrail Insights, send logs to CloudWatch, and alert on anomalous API usage.
+
+Q: How do you know who deleted an S3 bucket?
+A: Check CloudTrail management events for DeleteBucket.
+
+ONE-LINE CLOSER
+
+CloudTrail provides centralized, immutable audit logs of all AWS API activity, critical for security, compliance, and incident response.

@@ -2,6 +2,13 @@ RDS Backup and Restore
 
 =======================
 Key Terminologies in Backup and Restore
+
+- Fault tolerance in RDS is the ability of the database to withstand failures (hardware, instance, storage, or AZ failures) and continue operating or recover automatically without data loss. Fault tolerance is the ability of a system to keep working despite failures.
+
+- Failover is the specific action that happens when a failure occurs.
+
+- Fault tolerance is the system’s ability to continue operating despite failures, while failover is the automatic process of switching to a standby resource when a failure occurs.In RDS, fault tolerance is achieved through Multi-AZ architecture, and failover is the automatic promotion of the standby instance when the primary fails.
+
 1) RPO – Recovery Point Objective
 
 Definition:
