@@ -44,7 +44,7 @@ Bash Scripting : Script is a set of commands which helps us to automate the proc
 - use $variable to call the variable (eg: echo $a)
 - The sequence for any script is top to bottom, the commands will be executed from top to bottom.
 - To jump to a specific line in vi editor use :number of line.
-- Make sure to add a secondary command to a real time monitoring command so that the rest of the commands in a script are executed, because it won't execute the other commands until the real time command is exited. ( ex: top | grep -10)
+- Make sure to add a secondary command to a real time monitoring command so that the rest of the commands in a script are executed, because it won't execute the other commands until the real time command exits. ( ex: top | grep -10)
 - A variable in Bash is used to store data temporarily in memory and refer to it by name during script execution.
 - A variable is a value that can change, depending on conditions or information passed to the program.
 - The read command in Bash is used to take input from the user (stdin) and store it into variable(s).
@@ -65,4 +65,6 @@ Bash Scripting : Script is a set of commands which helps us to automate the proc
   | Nginx          | 80 / 443     | Acts as web server           |
   | httpd (Apache) | 80 / 443     | Traditional web server       |
   | Tomcat         | 8080         | Avoids conflict with port 80 |
+
+-  if-else is for conditions, for is for looping over items, and while is for looping until a condition changes.
 

@@ -1,6 +1,7 @@
 - Cloud Trial - It will help us track activities on an AWS account. It is activated by default and stores upto 90 days of logs.
 
-- Events are of three types:
- - Management Event.
- - Data Event.
- - Insight Event.
+- Events are of four types:
+ - Management Event: Capture management operations performed on your AWS resources.
+ - Data Event: Log the resource operations performed on or within a resource.
+ - Insight Event: Identify unusual activity, errors, or user behavior in your account.
+ - Network Activity Events: Network activity events provide information about resource operations performed on a resource within a virtual private cloud endpoint.
