@@ -1,0 +1,73 @@
+- Jenkins - It is an automation tool used to build, test, and deploy applications automatically. (Default Port: 8080). (Default Location: /var/lib/Jenkins).
+ - Prerequisite: JAVA.
+ - Jenkins works using REST APIs to communicate and automate tasks.
+ - Build executors are Jenkins workers that execute jobs, one job per executor.
+ - Jenkins assigns jobs to any available executor, usually skipping the first one reserved for internal tasks. Jenkins keeps the first executor free and uses it only when all other executors are busy.
+ - An Atom feed in Jenkins provides real-time updates about job and build activities.
+ - The number of executors depends on how many jobs run in parallel and the server’s CPU and memory.
+
+- CI (Continuous Integration): Code changes are tested automatically.
+
+- CD (Continuous Delivery/Deployment): Tested code is automatically released.
+
+- User
+  |
+  v
+ GitHub  -->  Jenkins  -->  Artifact Repo / Nexus / JFrog  -->  AWS EC2  -->  Tomcat
+              |    |
+              |    +--> SonarQube
+              |
+              +--> Maven
+
+- Explanation:
+	- Code goes to GitHub.
+	- Jenkins builds and checks it.
+	- Built file is stored in Artifactory / Nexus / JFrog.
+	- App is deployed to AWS EC2.
+	- Tomcat runs the app.
+
+- Maven → Builds the app.
+- Jenkins → Automates the whole process.
+- SonarQube → Checks code quality.
+- Artifact Repo → Stores built files.
+- Artifact → Final built file (like .jar or .war).
+- EC2 → Cloud server.
+- Tomcat → Runs the app. 
+
+- Plugin is a small add-on that adds extra features to a tool. Plugins help Jenkins connect to GitHub, Maven, AWS, SonarQube, etc. Without plugins, Jenkins can’t talk to other tools.
+
+- Jenkins supports Freestyle, Pipeline, and Multibranch jobs to automate different kinds of tasks.
+	- Plugin-based Jobs (UI based) → Click and configure.
+	 - Freestyle Job → Basic job to run commands.
+	 - Folder Job → Organizes jobs neatly.
+	 - External Job → Tracks jobs run outside Jenkins.
+	
+	- Pipeline-based Jobs (Code based) → Write steps as code.
+	 - Pipeline Job → Step-by-step automated process.
+	 - Multibranch Pipeline → Runs jobs for each Git branch.
+
+- Labels in Jenkins are used to control which node a job runs on.
+ - Label → A name or tag (example: linux, dev).
+ - Node → A machine connected to Jenkins (server/VM).
+ - Job → A task Jenkins runs (build, test, deploy).
+ - Run → When the job is actually executed.
+- Labels are tags that tell Jenkins which machine should run a job.
+
+- To connect multiple nodes(machines/instances) to Jenkins:
+ - Launch another server (EC2 / VM).
+ - Install Java on it. (On the main server → Install Jenkins + Java)(On other nodes (instances) → Install only Java)
+ - Go to Jenkins → Manage Nodes.
+ - Add new node.
+ - Connect it (SSH is common).
+ - Set labels and executors.
+
+- Jenkins weather icons show job health based on recent build success and failures.
+ - ☀️ Sunny → All recent builds successful.
+ - 🌤️ Partly Cloudy → Mostly successful, few failures.
+ - ☁️ Cloudy → Equal mix of success and failure.
+ - 🌧️ Rainy → Mostly failures.
+ - ⛈️ Stormy → Almost all builds failing.
+
+- Role based authorization plugin - to create different users in different roles.
+
+- A Git hook is a script that runs automatically when certain Git actions occur.
