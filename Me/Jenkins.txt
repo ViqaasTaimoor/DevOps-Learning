@@ -60,15 +60,8 @@
  - Add new node.
 	- Remote root directory - /home/ec2-user
  - Connect it (SSH is common).
-	-Slave Machine :
-	 - Install Java
-	 - Create ssh-keygen
-	 - cat id_rsa.pub > authorized_keys
-	 - chmod 700 authorized_keys
-	- Master Machine:
 	- sudo su 
-	- mkdir -p /var/lib/Jenkins/.ssh
-	- ssh-keyscan -H public-ip >>/var/lib/jenkins/.ssh/known_hosts
+	- ssh-keyscan -H public-ip >>/var/lib/Jenkins/.ssh/known_hosts
 	- chown ec2-user:ec2-user known_hosts
 	- chmod 777 known_hosts
  - Set labels and executors.
@@ -142,3 +135,100 @@
 - Jenkins-url/restart, will also help us restart Jenkins.
 
 - To disable the security feature, edit config.xml and make use security as false.(Not Recommended)(Even if forgot password).
+
+- A single box environment is a setup where all components run on one server.
+	- All tools are installed on the same machine.
+	- It is used for practice, testing and small projects.
+	- It is not scalable.
+	- If server fails → everything stops.
+
+- A multibox environment is a setup where different components run on separate servers for better scalability and reliability.
+
+- CI/CD Stages:
+ - Git clone ----> SonarQube Integration ----> Maven Compilation -----> Nexus Artifactory ----> Post-build actions (Email & Slack Notification) ----> Deploy to Tomcat.
+ - Git clone → Get code from repo.
+ - SonarQube → Check code quality.
+ - Maven → Build the app.
+ - Nexus / Artifactory → Store build file.
+ - Post-build → Send alerts.
+ - Tomcat → Run the app.
+- Take code → check → build → store → notify → deploy.
+
+- SonarQube Metrics:
+	- Bugs → Mistakes that can break the app.
+	- Vulnerabilities → Security risks.
+	- Code smells → Bad coding practices.
+	- Coverage → How much code is tested.
+	- Duplications → Repeated code.
+	- Complexity → Hard-to-read logic.
+- Sonar Scanner is a tool that sends your code to SonarQube for analysis.
+- Prerequisites to install SonarQube on EC2:
+	- Java (JDK 17) → SonarQube runs on Java.
+	- Enough RAM → Minimum 2 GB, better 4 GB.
+	- Linux EC2 instance → Ubuntu / Amazon Linux.
+	- Open port 9000 → To access SonarQube in browser.
+	- Database (for production) → PostgreSQL recommended.
+
+- Quality Gate in SonarQube is a pass/fail rule for your code.
+ - If rules pass → pipeline continues.
+ - If rules fail → pipeline stops.
+
+- Quality Profiles in SonarQube are rule sets used to check code.
+	- They define what rules SonarQube should follow.
+	- Example: naming rules, security rules, best practices.
+
+- Quality Profiles define the rules for analysis, while Quality Gates decide whether the code passes or fails.
+	- Profile = rules list.
+	- Gate = final decision.
+
+- Types of packages: jar/war/ear: JAR packages Java code, WAR packages web applications, and EAR bundles multiple modules like JARs and WARs for enterprise deployment. 
+	- JAR (Java Archive): Contains Java code and libraries. Used for normal Java apps or reusable code.Think: small package.
+	- WAR (Web Archive): Used for web applications. Contains HTML, JSP, servlets, configs. Runs on servers like Tomcat. Think: website package.
+	- EAR (Enterprise Archive): Big package that can contain multiple JARs + WARs. Used for large enterprise apps. Think: collection of apps.
+	- JAR  --> inside WAR.
+	- WAR  --> inside EAR.
+	- JAR = code, WAR = web app, EAR = full enterprise bundle.
+
+- Maven: Maven is a tool that builds and manages Java projects automatically.
+	- Downloads required libraries.
+	- Compiles the code.
+	- Runs tests.
+	- Creates packages like JAR/WAR/EAR.
+- After downloading and extracting Maven in /opt, go into bin folder, copy the path as it is the source of the mvn file. Now 'vi .bash_profile' and add MVN_HOME=the copied path under User specific environment. Then add $MVN_HOME in PATH, PATH =$PATH:$HOME/bin:$MVN_HOME. Then restart  the file using 'source ~/.bash_profile.
+
+- Goals are tasks Maven performs during a build.
+	- clean → Deletes old build files.
+	- compile → Converts code into class files.
+	- test → Runs tests.
+	- package → Creates JAR/WAR.
+	- install → Saves build to local system.
+	- deploy → Uploads build to repo (like Nexus).
+- Maven Parameters used in Jenkins:
+	- -DskipTests → Build without running tests.
+	- -X → Show detailed logs (debug).
+	- -e → Show error details.
+	- -U → Force update dependencies.
+	- -P profileName → Run a specific profile.
+	- -Dmaven.test.failure.ignore=true → Continue even if tests fail.
+- target directory contains maven packages.
+- .m2 directory stores all the dependencies inside Maven.
+- We can even run manual commands in directories, using mvn. We can do this to run the command on instance and check the errors. If we fix the issue locally it will automatically be fixed on the GUI.
+
+- Nexus is a tool that stores build files like JAR and WAR so teams can reuse them. It saves build artifacts and acts like a storage center for builds.
+	- Artifacts are the final build files created after compiling code.( .jar, .war, .zip).
+	- Only prerequisite is JAVA.
+- Steps to Install:
+	- cd /opt
+	- wget link
+	- extract
+	- rename
+	- adduser nexus
+	- sudo chown -R nexus:nexus /opt/nexus
+	- vi /optnexus/bin/nexus.rc and uncomment run_as_user
+	- run_as_user="nexus" (file should have only this line).
+	- sudo ln -s /opt/nexus/bin/nexus /etx/init.d/nexus  (to add nexus as a service at boot time).
+	- ./nexus start, status, restart
+	- default username: admin, default password: admin123
+	- get nexus details from pom.xml while configuring in Jenkins.
+
+- 'deploy to container' plugin, to deploy package to tomcat.  
