@@ -1,0 +1,79 @@
+- Terraform is a tool used to create servers and cloud resources automatically using code.
+ - Instead of manually creating EC2, VPC, or databases in AWS console, you write a small file and Terraform builds everything for you.
+ - Run one command → server gets created.
+
+- IAC - It means managing infrastructure like servers and networks using code so environments can be created automatically and consistently.
+
+- CloudFormation is an AWS tool used to create and manage AWS resources using a file instead of manual clicks.
+ - You write a YAML or JSON file describing things like: EC2, VPC, S3, Load Balancer.
+ - Run it → AWS builds everything automatically.
+
+- Terraform is preferred over CloudFormation because it supports multiple cloud providers, while CloudFormation works only within AWS.
+
+- Terraform was developed by HashiCorp (the same company that made Vault, Consul, etc.).
+
+- Terraform uses HCL — HashiCorp Configuration Language.
+
+- Terraform Registry is like an online library for ready-made Terraform code.
+
+- Example:
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "myserver" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+
+- Skeleton (for flexible usage):
+# provider → which cloud
+provider "aws" {
+  region = "ap-south-1"
+}
+
+# variables (optional inputs)
+variable "instance_type" {
+  default = "t2.micro"
+}
+
+# resource → what to create
+resource "aws_instance" "example" {
+  ami           = "ami-xxxxxxxx"
+  instance_type = var.instance_type
+}
+
+# output → show result
+output "instance_id" {
+  value = aws_instance.example.id
+}
+
+- .tf is the file extension used for Terraform configuration files.
+
+- Commands:
+ - terraform init: Prepares folder, downloads plugins. Run first always.
+  - terraform init -upgrade: Updates providers/modules.
+  - terraform init -reconfigure: Re-initializes setup.
+ - terraform plan: Shows what Terraform will create/change (preview).
+  - terraform plan -out=tfplan: Saves plan to a file.
+  - terraform plan -var="name=value": Pass variable value.
+ - terraform apply: Actually creates the resources.
+  - terraform apply -auto-approve: Skip confirmation.
+  - terraform apply tfplan: Apply saved plan file.
+ - terraform destroy: Deletes everything Terraform created.
+  - terraform destroy -auto-approve: Delete resources without asking.
+ - terraform validate: Checks if your code has errors.
+ - terraform fmt: Automatically formats Terraform configuration files to keep code clean and consistent.
+ - terraform show: Displays details of current state or plan.
+ - terraform output: Shows values from output block.
+
+- Global Parameters:
+ - -var="key=value": Pass variables.
+ - -target=resource.name: Apply only one resource.
+ - -refresh=false: Skip checking cloud state.
+
+- A Terraform provider is the plugin that connects Terraform to a cloud or service.
+
+- Idempotent is a concept that describes operations which produce the same result even if executed multiple times.
+
+- .tfstate is Terraform’s state file that tracks the current infrastructure so Terraform knows what to create, change, or keep.
