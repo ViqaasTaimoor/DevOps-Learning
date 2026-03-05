@@ -16,6 +16,11 @@
 
 - Terraform Registry is like an online library for ready-made Terraform code.
 
+- Terraform has managed resources that create infrastructure and data sources that only read existing infrastructure.
+ - resource → Create & manage
+ - data → Read only
+- A resource in Terraform represents an infrastructure component that Terraform creates and manages.
+
 - Example:
 provider "aws" {
   region = "ap-south-1"
@@ -42,16 +47,17 @@ resource "aws_instance" "example" {
   ami           = "ami-xxxxxxxx"
   instance_type = var.instance_type
 }
-
+====================================================================================================================================================================
 # output → show result
 output "instance_id" {
   value = aws_instance.example.id
 }
-
+- In output block - .content → gives file text, .filename → gives file name, .id → gives resource ID, you change it depending on what information you want.
+====================================================================================================================================================================
 - .tf is the file extension used for Terraform configuration files.
 
 - Commands:
- - terraform init: Prepares folder, downloads plugins. Run first always.
+ - terraform init: Prepares folder, downloads plugins. Run first always. Creates a .terraform directory.
   - terraform init -upgrade: Updates providers/modules.
   - terraform init -reconfigure: Re-initializes setup.
  - terraform plan: Shows what Terraform will create/change (preview).
@@ -71,9 +77,559 @@ output "instance_id" {
  - -var="key=value": Pass variables.
  - -target=resource.name: Apply only one resource.
  - -refresh=false: Skip checking cloud state.
-
+======================================================================================================================================================================
 - A Terraform provider is the plugin that connects Terraform to a cloud or service.
+ - There are 3 main types of Terraform providers:
+ - Official Providers: Made and maintained by HashiCorp.
+ - Partner Providers: Made by partner companies.
+ - Community Providers: Made by individuals or open-source contributors.
 
 - Idempotent is a concept that describes operations which produce the same result even if executed multiple times.
 
 - .tfstate is Terraform’s state file that tracks the current infrastructure so Terraform knows what to create, change, or keep.
+
+- Sample Jenkinsfile for when someone pushes the .tf file to repo:
+pipeline {
+  agent any
+
+  stages {
+
+    stage('Checkout Code') {
+      steps {
+        git url: 'https://github.com/ViqaasTaimoor/Testing.git', branch: 'main'
+      }
+    }
+
+    stage('Terraform Init') {
+      steps {
+        sh 'terraform init'
+      }
+    }
+
+    stage('Terraform Validate') {
+      steps {
+        sh 'terraform validate'
+      }
+    }
+
+    stage('Terraform Apply') {
+      steps {
+        sh 'terraform apply -auto-approve'
+      }
+    }
+  }
+
+  post {
+    success {
+      slackSend(
+        channel: '#jenkins-integration',
+        message: "SUCCESS: ${env.JOB_NAME} build #${env.BUILD_NUMBER} completed."
+      )
+    }
+  }
+}
+
+- Sample Jenkinsfile if the code already exists.
+pipeline {
+  agent any
+
+  stages {
+
+    stage('Terraform Init') {
+      steps {
+        sh 'terraform init'
+      }
+    }
+
+    stage('Terraform Validate') {
+      steps {
+        sh 'terraform validate'
+      }
+    }
+
+    stage('Terraform Apply') {
+      steps {
+        sh 'terraform apply -auto-approve'
+      }
+    }
+  }
+
+  post {
+    success {
+      slackSend(
+        channel: '#jenkins-integration',
+        message: "SUCCESS: ${env.JOB_NAME} build #${env.BUILD_NUMBER} completed."
+      )
+    }
+  }
+}
+
+- Every time a new provider is added, terraform must be initialized.
+- Never manually make changes in tfstate file.
+
+- Mutable Infrastructure: Terraform updates the same resource when you change something. Same resource, updated configuration.
+- Immutable Infrastructure: Terraform destroys the old resource and creates a new one when change cannot be safely updated. Replace instead of modify.
+===================================================================================================================================================================
+- Lifecycle Rules: They tell Terraform how to behave when creating or deleting resources.
+ - create_before_destroy: Create new resource first → then delete old one. Prevents downtime.
+ - prevent_destroy: Stops Terraform from deleting a resource. Protects important resources.
+ - ignore_changes: Ignores certain changes. Terraform won’t update that field even if it changes.
+ - Example:
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-12345678"
+  instance_type = "t2.micro"
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = false
+    ignore_changes        = [instance_type]
+  }
+}
+
+- create_before_destroy → New server created first, then old deleted.
+- prevent_destroy → Allows delete (since false).
+- ignore_changes → If instance type changes, Terraform ignores it.
+====================================================================================================================================================================
+- Production-level Terraform folder:
+terraform-project/
+│
+├── modules/
+│   ├── vpc/
+│   ├── ec2/
+│   └── rds/
+│
+├── environments/
+│   ├── dev/
+│   │    ├── main.tf
+│   │    ├── variables.tf
+│   │    ├── outputs.tf
+│   │    └── backend.tf
+│   │
+│   ├── staging/
+│   └── prod/
+│
+├── versions.tf
+├── provider.tf
+├── variables.tf
+└── outputs.tf
+
+- modules/ → Reusable building blocks (VPC, EC2, DB).
+- environments/ → Separate folders for dev, staging, prod.
+- backend.tf → Stores state safely (like S3).
+- versions.tf → Locks Terraform & provider versions.
+- variables.tf → All input variables are defined here.
+- outputs.tf → Shows important values after apply.
+==================================================================================================================================================================
+
+- Skeleton for variables:
+# String variable
+variable "variable_name" {
+  description = "Explain what this variable is for"
+  type        = string
+  default     = "default_value"
+}
+
+# Number variable
+variable "number_variable" {
+  description = "Example number"
+  type        = number
+  default     = 1
+}
+
+# Boolean variable
+variable "bool_variable" {
+  description = "True or false value"
+  type        = bool
+  default     = true
+}
+
+# List variable
+variable "list_variable" {
+  description = "List of values"
+  type        = list(string)
+  default     = ["value1", "value2"]
+}
+
+# Map variable
+variable "map_variable" {
+  description = "Key value pairs"
+  type        = map(string)
+  default     = {
+    key1 = "value1"
+    key2 = "value2"
+  }
+}
+
+- string → Stores text. Example: "t2.micro", "us-east-1". Use when value is a single word or sentence.
+ - string → one value.
+ - list(string) → ordered group.
+ - set(string) → unordered group.
+- number → Stores numeric value. Example: 1, 10, 100. Use for counts, sizes, ports.
+- bool → Stores true or false. Use for enable/disable features.
+- list → Stores multiple values in order. Example: ["subnet-1", "subnet-2"]. Use when you need multiple similar items.
+- map → Stores key–value pairs. Use for tags, structured settings. Example:
+{
+  Name = "Server1"
+  Env  = "Prod"
+}
+
+- In main.tf use var.variablename to use the variables.
+- If variables.tf is missing, we can pass variable values using the -var option during terraform apply.
+- Example if main.tf has instance_type = var.instance_type, then terraform apply -var="instance_type=t2.micro".
+- For multiple variables: 
+terraform apply \
+  -var="instance_type=t2.micro" \
+  -var="instance_count=2" \
+  -var="environment=prod"
+- In production, we define only variable types in variables.tf and use environment-specific tfvars files during terraform apply.
+ - dev.tfvars
+ - prod.tfvars
+- so when we use the apply command we can specify which variables are to be used. terraform apply -var-file="prod.tfvars".
+
+- A .tfvars file only contains variable name = value.
+
+- Example: dev.tfvars
+instance_type  = "t2.micro"
+instance_count = 1
+environment    = "dev"
+enable_backup  = false
+
+- Example: prod.tfvars
+instance_type  = "t3.large"
+instance_count = 3
+environment    = "prod"
+enable_backup  = true
+
+- Example variables.tf when .tfvars exist: One variables.tf defines all variables, and multiple tfvars files supply different environment values.
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+
+variable "instance_count" {
+  description = "Number of instances"
+  type        = number
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "enable_backup" {
+  description = "Enable or disable backup"
+  type        = bool
+}
+
+- This is how main.tf will look like:
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-12345678"
+  instance_type = var.instance_type
+  count         = var.instance_count
+
+  tags = {
+    Environment = var.environment
+  }
+}
+
+- Just run terraform apply -var-file="prod.tfvars" and the values will be for the production environment.
+
+- Interactive mode means Terraform asks you for input during execution. If a variable has no default and no tfvars value it will ask the user to enter the value. It happens when we define a variable without default, type and description.
+
+- In Terraform, environment variables prefixed with TF_VAR_ are used to pass variable values externally without modifying code. $env:TF_VAR_instance_type="t2.micro". It can be done whne i only defined type in my variables.tf and nothing else.
+
+- Terraform Variable Priority (Highest → Lowest)
+ - Command line -var or -var-file
+ - Environment variables (TF_VAR_)
+ - Default value in variables.tf
+- Because Terraform assumes:
+ - What you pass in command line = most intentional
+ - Environment variable = external override
+ - Default = fallback only
+=============================================================================================================================================================
+- Terraform takes the attribute output of one resource and automatically uses it in another, creating dependency.
+- Example:
+resource "aws_subnet" "main" {
+  ...
+}
+
+resource "aws_instance" "app" {
+  subnet_id = aws_subnet.main.id
+}
+- so it will use the output of the first resource block as subnet_id.
+===========================================================================================================================================================
+- Never store state locally in production. Instead, use remote backend storage. Like S3 bucket.
+
+- State Locking: It prevents multiple users from running Terraform at the same time.
+ - When one person runs: terraform apply, Terraform locks the state file.
+ - If another person tries to run apply, they get an error: Error: state is locked.
+ - This prevents conflicts.
+ - Best Production Method (AWS): S3 → store state | DynamoDB → handle locking
+ - Backend = Where Terraform saves its state file.
+ - Terraform block is used because backend settings are global settings, not resources.
+- Example:
+terraform {
+  backend "s3" {
+    bucket         = "your-bucket-name"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-state-lock-dynamo"
+  }
+}
+
+- To remove the lock, just remove this line from backend: dynamodb_table = "terraform-state-lock-dynamo".
+- Then run: terraform init -reconfigure. The locking will stop.
+- For temporarily disabling the lock, only for one command: terraform apply -lock=false.
+- DynamoDB supports two billing modes: PROVISIONED capacity and PAY_PER_REQUEST on-demand billing.
+- Provisioned = fixed capacity, Pay per request = automatic scaling.
+=============================================================================================================================================================
+- If we want a specific version of HashiCorp language while executing terraform init, we can go to terraform registry, get the code block for the specific version and paste it in our script, that way when we execute terraform init it will fetch the specified version.
+
+- Data Sources - They are used to read existing resources, not create new ones.
+- Example:
+data "aws_vpc" "existing_vpc" {
+  default = true
+}
+- It will fetch details like VPC ID, CIDR block, ARN & Owner ID.  
+-  Use an output block to see the answer in terminal after apply.
+output "vpc_id" {
+  value = data.aws_vpc.existing_vpc.id
+}
+==================================================================================================================================================
+- Meta-arguments are special settings that control how a resource behaves.
+- count → Creates multiple resources using a number (index-based). Prefer for_each over count.
+- Example:
+ - variables.tf:
+variable "filenames" {
+  type = list(string)
+}
+ - main.tf:
+resource "local_file" "pet" {
+  count    = length(var.filenames)
+  filename = var.filenames[count.index]
+  content  = "I love cats!"
+}
+
+- for_each → Creates multiple resources using a map or set (key-based).
+- Example:
+ - variables.tf:
+variable "files" {
+  type = set(string)
+}
+ - main.tf:
+resource "local_file" "pet" {
+  for_each = var.files
+
+  filename = each.value
+  content  = "I love cats!"
+}
+- each.value gives the current item value when using for_each in Terraform. each.value is the current item Terraform is working on.
+- When using map, each.key → key, each.value → value.
+- A map is a variable type that stores data in key–value pairs.
+- In for_each, the number of items in the variable decides how many resources Terraform creates.
+- toset() converts a list into a set.
+- for_each = toset(["a.txt", "b.txt", "c.txt"])
+ - Converts the list into a set.
+ - Removes duplicates automatically.
+ - Order is not guaranteed.
+- If your variable is a list but for_each expects a set, you use toset() to convert it. 
+
+- depends_on → Force order of creation.
+- lifecycle → Control create/delete behavior.
+- provider → Use a specific provider.
+- Example:
+provider "local" {
+  alias = "custom"
+}
+
+resource "local_file" "pet" {
+  provider = local.custom
+
+  filename = "pet.txt"
+  content  = "I love cats!"
+}
+
+- Terraform will not recreate a resource if it already exists in the state file.
+
+- Heredoc is used to write multi-line text inside Terraform.
+- Example:
+resource "local_file" "example" {
+  filename = "test.txt"
+
+  content = <<EOF
+Hello
+This is multi-line text
+Terraform example
+EOF
+}
+- Everything between <<EOF and EOF is the content.
+
+- If something is used multiple times → keep it separate and reusable. Example:
+ - Policies → separate and attach to many users.
+ - Security groups → reuse for many servers.
+ - Modules → reuse same infrastructure logic.
+ - Variables → don’t hardcode values.
+- But don’t over-separate small things unnecessarily. Keep it practical.
+- If it’s reusable → separate it. If it’s one-time only → keep it simple.
+================================================================================================================================================================
+- Provisioners run scripts or commands after a resource is created.
+- Provisioners will be written inside resource blocks.
+- Example:
+resource "aws_instance" "server" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install nginx -y"
+    ]
+  }
+}
+- Provisioners are not recommended for production.
+
+- There are 3 types of provisioners in Terraform:
+- local-exec: Runs command on your local machine (or Jenkins machine).
+- Example:
+resource "aws_instance" "server" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+
+  provisioner "local-exec" {
+    command = "echo Server Created!"
+  }
+}
+
+- remote-exec: Runs command inside the created server (like EC2).
+- Example:
+resource "aws_instance" "server" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+  key_name      = "my-key"
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install nginx -y"
+    ]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("my-key.pem")
+    host        = self.public_ip
+  }
+}
+
+- file: Copies files from local machine → to remote server.
+- Example:
+resource "aws_instance" "server" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+  key_name      = "my-key"
+
+  provisioner "file" {
+    source      = "test.txt"
+    destination = "/home/ec2-user/test.txt"
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("my-key.pem")
+    host        = self.public_ip
+  }
+}
+- Copies test.txt to the server.
+
+- Provisioners Behaviors:
+- By default → run after resource creation.
+- We can change to run on destroy:
+provisioner "local-exec" {
+  when    = destroy
+  command = "echo Resource deleted"
+}
+- when → creation or destroy
+
+- Continue even if it fails.
+- By default → Terraform fails. We can change to
+provisioner "local-exec" {
+  command    = "exit 1"
+  on_failure = continue
+}
+- on_failure → fail or continue
+
+- Order → top to bottom
+
+- self means the current resource block you are inside.
+- If you are inside: resource "aws_instance" "my_ec2" {..}
+ - then self.public_ip means Public IP of THIS EC2 instance.
+- During destroy, Terraform only allows access to the same resource — so we use self instead of full name.
+- command = "echo EC2 instance ${self.public_ip} destroyed successfully! > output.txt".
+===================================================================================================================================================
+- taint tells Terraform: This resource is bad. Destroy it and recreate it in next apply.
+- Command: terraform taint aws_instance.server
+- Next terraform apply → Terraform will destroy and recreate that server.
+- taint → force recreate
+
+- untaint removes that mark.
+- Command: terraform untaint aws_instance.server
+- Now Terraform will NOT recreate it.
+- untaint → cancel recreate
+
+- Modern Terraform prefers: terraform apply -replace=aws_instance.server
+
+====================================================================================================================================================
+- Terraform Debugging:
+- When you run: terraform apply, Terraform already shows errors in the terminal. But if you want more detailed logs, you enable logging using environment variables.
+
+- Enable Logs: Set-Item -Path env:TF_LOG -Value "TRACE". This tells terraform to show detailed logs.
+
+- To save logs to a file - Set-Item -Path env:TF_LOG_PATH -Value "terraform.log".
+
+- To turn off logging:
+Remove-Item Env:TF_LOG
+Remove-Item Env:TF_LOG_PATH
+
+- Terraform Log Levels:
+ - INFO – Basic information
+ - WARN – Warning messages
+ - ERROR – Errors
+ - DEBUG – Detailed debugging info
+ - TRACE – Very detailed (deepest level)
+
+- Terraform only looks at one value: TF_LOG.
+- If it is set to: TRACE, then It will always show full detailed logs, until you change or remove it.
+===================================================================================================================================================
+- terraform import is used to bring an existing resource into Terraform management.
+- Example:
+You created an EC2 manually in AWS.
+Now you want Terraform to manage it.
+Run: terraform import aws_instance.server i-1234567890
+- Terraform adds that resource to the state file.
+- It does NOT create anything.
+
+- After import, you must write the correct resource block in your .tf file. Import only updates the state, not your code.
+- Terraform manages it = Terraform can create, update, or destroy it.
+- To import:
+Write the resource block first:
+resource "aws_instance" "server" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+- This does NOT create anything yet.
+
+Run import command
+terraform import aws_instance.server i-0abc123456789xyz
+- aws_instance.server → matches your .tf block
+
+- Write block → Import → Plan → Apply (if needed)
+====================================================================================================================================================
