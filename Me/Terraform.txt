@@ -345,7 +345,7 @@ resource "aws_instance" "example" {
 
 - Interactive mode means Terraform asks you for input during execution. If a variable has no default and no tfvars value it will ask the user to enter the value. It happens when we define a variable without default, type and description.
 
-- In Terraform, environment variables prefixed with TF_VAR_ are used to pass variable values externally without modifying code. $env:TF_VAR_instance_type="t2.micro". It can be done whne i only defined type in my variables.tf and nothing else.
+- In Terraform, environment variables prefixed with TF_VAR_ are used to pass variable values externally without modifying code. $env:TF_VAR_instance_type="t2.micro". It can be done when we only define type in my variables.tf and nothing else.
 
 - Terraform Variable Priority (Highest → Lowest)
  - Command line -var or -var-file
@@ -633,3 +633,59 @@ terraform import aws_instance.server i-0abc123456789xyz
 
 - Write block → Import → Plan → Apply (if needed)
 ====================================================================================================================================================
+- Terraform Modules: It is a reusable set of Terraform code used to create resources multiple times.
+- Instead of writing the same Terraform code again and again, you write it once inside a module and reuse it wherever needed.
+- Example: If you need the same EC2 setup for dev, test, and prod, you create a module and call it 3 times.
+ - Simple structure:
+project/
+ ├ main.tf
+ └ modules/
+     └ ec2/
+         ├ main.tf
+         ├ variables.tf
+         └ outputs.tf
+  - Calling the module:
+module "ec2_instance" {
+  source = "./modules/ec2"
+}
+ - Terraform will run the code inside that folder.
+ - Usually we use a relative path because the module is inside the same project.
+ - ./ means from the current folder.
+ - You can use absolute paths, but it’s not recommended because the path may break if the project moves to another machine.
+ - If a module variable has a default value, we don’t need to pass it when calling the module. But if the variable is just defined and needs to be input in console then you need to pass the variable in the module block.
+ - Example:
+module "ec2" {
+  source = "./modules/ec2"
+  instance_type = "t2.micro"
+}
+- module.<module_name>.<output_name> : when calling it in other module configurations.
+
+- You put all related .tf files inside a folder (that folder is the module). Then in your main Terraform file, you call that folder, and Terraform runs everything inside it.
+
+- TestingEC2
+│
+├── Infrastructure   → module (NO backend here)
+│
+├── Development      → terraform init / apply here
+│     main.tf
+│     backend.tf   ← backend goes here
+│
+├── Production
+│     main.tf
+│     backend.tf
+
+- Resource blocks for aws resources:
+ - VPC → CIDR block.
+ - Subnet → VPC + CIDR.
+ - Security Group → Name, vpc_id, Ports.
+ - NIC → Subnet + Security.
+ - EC2 → AMI + Size
+ - EC2 + NIC must be in same subnet / AZ. So add subnet_id = var.subnet_id to ec2.tf
+ - protocol = "-1" in Security group ingress and egress rule allows all protocols.
+=========================================================================================================================================================
+- Terraform workspaces let you use the same Terraform code but keep different state files.
+- This is useful for environments like: dev, prod, test. Same code → different infrastructure.
+- Example:
+terraform workspace new dev
+terraform workspace new prod
+- Now Terraform keeps separate state files for each workspace.
