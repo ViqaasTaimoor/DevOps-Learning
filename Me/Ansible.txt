@@ -1,0 +1,246 @@
+- Ansible - Ansible is a tool used to automate server tasks. It is also agentless. It works on push based. Python is a pre-requisite.
+ - Instead of manually logging into servers and installing software, updating configs, or restarting services, you write simple instructions in a file and Ansible does it automatically on many servers.
+ - The inventory file contains a list of server IPs or hostnames.
+ - Ansible always uses the SSH protocol. Port:22.
+
+- An Ansible playbook is a file that contains the steps Ansible should perform.
+ - An Ansible playbook is a YAML file that contains automation steps Ansible executes on servers.
+ - YAML stands for YAML Ain't Markup Language (a recursive acronym). Originally, it stood for "Yet Another Markup Language," but was changed to highlight its focus on data-oriented serialization rather than document markup.
+ - Extension used is .yml or .yaml
+
+- Groups are used to organize servers in the inventory file.
+ - Example:
+[webservers]
+192.168.1.10
+
+[dbservers]
+192.168.1.20
+
+- A play connects a group of servers with the tasks that should run on them.
+ - Example:
+- hosts: webservers
+
+- Tasks are the individual actions Ansible performs on servers.
+ - Example:
+tasks:
+  - name: Install nginx
+
+- Modules are built-in tools Ansible uses to perform tasks like installing packages or managing services.
+ - Examples:
+apt → install packages
+copy → copy files
+service → start/stop services
+
+- become allows Ansible tasks to run with sudo privileges.
+ - Example:
+become: yes
+
+- Playbooks are written in YAML format, which is a simple structured text format.
+ - Example:
+key: value
+
+- Simple flow: Ansible works by reading the inventory, connecting to servers via SSH, and executing tasks defined in a playbook.
+ - Inventory → Playbook → Run command → Tasks run on servers
+
+- Adhoc commands are one-time Ansible commands used to run a quick task on servers without writing a playbook. Used for quick checks or small tasks.
+ - Example: ansible webservers -m ping
+ - To install nginx: ansible webservers -m apt -a "name=nginx state=present" --become
+  - webservers → server group
+  - -m → module to use
+  - -a → arguments for the module
+
+- We can target a specific server in Ansible using the host name, IP address, or the --limit option.
+ - Use the server IP directly: ansible 192.168.1.10 -m ping.
+ - Give the server a name in inventory: give name like web1 or something.
+[webservers]
+web1 ansible_host=192.168.1.10
+web2 ansible_host=192.168.1.11
+ - Limit option (very common): ansible-playbook install.yml --limit web1 (or) ansible-playbook deploy.yml --limit 192.168.1.10
+
+- ssh-copy-id automatically copies your public key into the server’s authorized_keys file. Keygen command ( ssh-keygen -t ed25519 )
+ - ssh-copy-id -i ~/.ssh/id_ed25519.pub -o "IdentityFile=yourkey.pem" ec2-user@172.31.16.108
+
+- The Ansible shell module is used to run normal commands on remote servers.
+
+- The -i parameter is used to tell Ansible which inventory file to use.
+ - ansible-playbook -i /opt/inventories/hosts deploy.yml
+
+- The setup module is used to collect information about a server.
+ - ansible webservers -m setup : This will connect to the servers and show all system information.
+
+- If no password less authentication is set up then when can use:
+ansible-playbook deploy.yml --user=wolf --ask-pass
+==========================================================================================================================================================
+- In Ansible we group servers by OS and run different tasks for each group in the same playbook.
+- Example:
+- hosts: ubuntu
+  tasks:
+    - name: Install nginx on Ubuntu
+      apt:
+        name: nginx
+        state: present
+
+- hosts: centos
+  tasks:
+    - name: Install nginx on CentOS
+      yum:
+        name: nginx
+        state: present
+
+- If servers are not grouped, Ansible can use the facts collected by the setup module to detect the OS.
+- Example:
+- hosts: all
+  tasks:
+    - name: Install nginx on Ubuntu
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install nginx on CentOS
+      yum:
+        name: nginx
+        state: present
+      when: ansible_os_family == "RedHat"
+
+====================================================================================================================================================================
+- ansible-playbook playbook_name --syntax-check - It is used to check the syntax of the YAML script.
+- ansible-playbook playbook_name --check - It is used to check what will the script implement.
+
+- Notify and Handlers - They are used to run a task only when something changes.
+ - notify tells Ansible to trigger another task.
+ - Example:
+ - name: copy nginx config
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx
+ 
+ - A handler is the task that runs when notified.
+ - Example:
+	handlers:
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted
+
+- The flow becomes:
+ Task runs
+   ↓
+File changed
+   ↓
+notify triggers handler
+   ↓
+handler runs
+====================================================================================================================================================================
+- debug module - Used to print output or variables during playbook execution.
+ - Output will show the message on the terminal.
+ - Example:
+ - name: show message
+  debug:
+    msg: "Hello from Ansible"
+
+- register module - Used to store the result of a task into a variable.
+ - Example:
+ - name: check disk space
+  command: df -h
+  register: disk_output
+  
+  Now the output is stored in: disk_output
+  
+  We can print it:
+  - debug:
+    var: disk_output
+	
+- Simple Flow:
+Task runs
+   ↓
+register saves result
+   ↓
+debug prints the result
+====================================================================================================================================================================
+- The -l (limit) option restricts playbook execution to specific hosts from the inventory.
+- Example: ansible-playbook playbook.yml -l web1
+
+- Ansible Vault - It is used to hide sensitive data in Ansible files by encrypting it. Instead of writing them in plain text, Ansible Vault encrypts them so others cannot read them.
+- Example: ansible-vault create secrets.yml. This creates a file where the content is encrypted. When Ansible runs the playbook, it will ask for the vault password to unlock the secrets.
+- ansible-vault encrypt filename - to encrypt a file.
+- ansible-vault view filename - to view the contents of an encrypted file.
+- ansible-vault edit filename - to edit the file.
+- ansible-vult rekey filename - to edit the password.
+
+
+- Ansible variables - They are used to store values so you don’t have to repeat or hardcode them. We create a variables.yml  to store the variables.
+- Example:
+package_name: httpd
+service_name: httpd
+file_path: /tmp/test.txt
+- Then in playbook we can use the variables:
+- hosts: all
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: install package
+      yum:
+        name: "{{ package_name }}"
+        state: present
+
+ 
+- Inline variables are variables written directly inside a task or command instead of a separate variables section.
+- Example:
+- hosts: all
+  tasks:
+    - name: install package
+      yum:
+        name: "{{ package_name }}"
+        state: present
+      vars:
+        package_name: httpd
+		
+- If variables.yml is in the same folder as the playbook, this is enough:
+vars_files:
+  - variables.yml
+- If the file is in another folder, then you must give the path.
+vars_files:
+  - vars/variables.yml
+  
+ - Command line variables: They are variables passed during playbook execution using the -e option.
+ - ansible-playbook playbook.yml -e "package_name=nginx"
+
+- Prompt variables are variables where Ansible asks the user to enter a value while running the playbook.
+- Example:
+- hosts: all
+  vars_prompt:
+    - name: package_name
+      prompt: "Enter the package name"
+      private: no
+
+  tasks:
+    - name: install package
+      yum:
+        name: "{{ package_name }}"
+        state: present
+		
+- Inventory variables: Defined in the inventory file for hosts or groups.
+- Example: [web]
+server1 ansible_user=ec2-user
+
+- Ansible Loop - A loop in Ansible is used to repeat the same task multiple times for different values.
+- When you use a loop, Ansible uses item to represent the current value. name: "{{ item }}"
+- When you use a variables file, the loop usually contains the variable name. loop: "{{ packages }}"
+- packages = variable name
+  item = each value inside that variable
+- Inside a loop, you usually define a list of values (like names, packages, files, users, etc.)
+- Example:
+- name: install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - httpd
+    - git
+    - vim
+So Ansible will install: httpd, git, vim
+
+- 
