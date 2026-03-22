@@ -169,7 +169,7 @@ debug prints the result
 - ansible-vault edit filename - to edit the file.
 - ansible-vult rekey filename - to edit the password.
 
-
+============================================================================================================================================================================================
 - Ansible variables - They are used to store values so you don’t have to repeat or hardcode them. We create a variables.yml  to store the variables.
 - Example:
 package_name: httpd
@@ -225,7 +225,7 @@ vars_files:
 - Inventory variables: Defined in the inventory file for hosts or groups.
 - Example: [web]
 server1 ansible_user=ec2-user
-
+============================================================================================================================================================================================
 - Ansible Loop - A loop in Ansible is used to repeat the same task multiple times for different values.
 - When you use a loop, Ansible uses item to represent the current value. name: "{{ item }}"
 - When you use a variables file, the loop usually contains the variable name. loop: "{{ packages }}"
@@ -242,5 +242,45 @@ server1 ansible_user=ec2-user
     - git
     - vim
 So Ansible will install: httpd, git, vim
+============================================================================================================================================================================================
+- Ansible tags are labels used to run specific tasks in a playbook instead of executing the whole playbook.
+- Example:
+- name: Install nginx
+  yum:
+    name: nginx
+    state: present
+  tags: install
 
-- 
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+  tags: start
+ 
+ - ansible-playbook playbook.yml --tags install : Only runs tasks with install tag
+ - ansible-playbook playbook.yml --tags "install,start" : multiple tags
+ - ansible-playbook playbook.yml --skip-tags "install" : --skip-tags will ignore all tasks with that tag across the whole playbook.
+ ===========================================================================================================================================================================================
+ - Ansible roles = a way to organize your playbook into folders
+ - Ansible roles are a structured way to organize and reuse playbook tasks using a predefined folder layout.
+ - A role is like a mini project with its own: tasks, variables, files, handlers.
+ - Example:
+ roles/
+  nginx/
+    tasks/
+    vars/
+    files/
+- So instead of writing everything in one playbook, you just call:
+roles:
+  - nginx
+  
+- ansible-galaxy init nginx : to create a role.
+============================================================================================================================================================================================
+- Ansible Tower is a web-based UI that helps manage, run, and schedule Ansible playbooks centrally.
+- AWX = free version of Ansible Tower. It gives you the same web UI, but it’s open-source.
+
+- LAMP stack is a set of 4 tools used to run websites:
+L → Linux (operating system)
+A → Apache (web server)
+M → MySQL / MariaDB (database)
+P → PHP (backend language)
