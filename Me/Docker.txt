@@ -1,0 +1,98 @@
+- Docker: It is a tool that lets you package your app with everything it needs (code, libraries, settings) into one box called a container, so it runs the same anywhere.
+ - Docker reduces compatibility issues because everything your app needs is packed inside the container. It minimizes compatibility issues by packaging applications with their dependencies into containers that run consistently across environments.
+ 
+- Virtualization (VMs):
+ - Runs a full OS inside another machine
+ - Heavy, slower
+ - More isolation
+ - VM = full computer inside computer
+
+- Containerization (Docker):
+ - Shares the same OS, only runs the app
+ - Light, fast
+ - Easy to start/stop
+ - Container = just app in a box
+ 
+- Docker Hub - It is an online place where you can store, share, and download Docker images.
+- Docker hierarchy - It consists of Dockerfile to define, Image to package, and Container to run the application.
+ - Dockerfile (Instructions to build your app) → Image (Built from Dockerfile) → Container (Running instance of an image)
+===============================================================================================================================================
+- docker images: to view the images.
+- docker images rmi image_id: to remove the specific image.
+- docker pull image_name: pull images.
+- docker run -d -p <host_port>:<container_port> <image>: to start a container in background. (-d: Run in background, -p 80:80: Port mapping (host:container), --name myapp: Give container a name, -it: Interactive mode (for terminal use), -v /data:/app: Share files between host and container)
+ - container_port (right side) (Fixed) = Port the app uses inside container.
+ - host_port (left side) (You choose)= Port you use to access from your system.
+ - Access host port → it redirects to container app.
+ - Step 1: Check app’s default port: nginx → 80, tomcat → 8080, mysql → 3306.
+ - Step 2: Pick any free port on your system: 8080, 3000, 5000 etc.
+ - Step 3: Map it: <your_port>:<app_port>
+- docker ps: To see the running containers.
+- docker stop <container_id>: to stop the container.
+- docker rm <container_id>: to remove the container.
+- docker logs <container_id>: to view container logs.
+- docker exec -it <container_id> bash: to enter the container.
+- docker inspect <container_id>: to check details of a container.
+- sudo usermod -aG docker ec2-user: give docker permissions to a user. (Docker permissions are granted by adding the user to the docker group using usermod -aG docker.)
+- newgrp docker: applies group changes immediately.
+- docker cp <source> <container>:<destination>: copy file to container.
+ - Example: docker cp test.txt nginx:/usr/share/nginx/html
+- docker cp <container>:<source> <destination>: copy file from container to source.
+ - Example: docker cp nginx:/usr/share/nginx/html/index.html . - "." means current directory.
+- docker run -d -v <volume_name>:<container_path> <image> : to create/attach a volume for the image.
+- docker volume ls : to list all volumes.
+- docker system prune : Cleans everything unused (system-wide)
+ - docker container prune   # only stopped containers
+ - docker image prune       # only unused images
+ - docker volume prune      # only unused volumes
+ - docker network prune     # only unused networks
+- docker stats : shows live usage of containers.
+- docker run -d -m 512m nginx : Limit memory.
+- docker run -d --cpus="1.0" nginx : Limit CPU.
+- docker run -d -m 512m --cpus="1.0" nginx : Limit both CPU and memory.
+- docker build -t <image_name> <path> : used to build an image using a Dockerfile.
+- docker push : Used to upload your image to Docker Hub.
+ - docker login
+ - docker tag myapp username/myapp:latest
+ - docker push username/myapp:latest
+ - Tag → then push to Docker Hub
+
+=============================================================================================================================================
+- Docker volumes are used to store data outside the container.
+- Volumes keep data safe even if container is removed.
+- Example: docker run -d -p 81:80 -v mydata:/data --name nginx nginx : mydata = volume, /data = path inside container.
+ - Docker checks volume mydata. If not present → creates it.
+ - If not present → creates it
+ - Mounts volume to /data inside container.
+ - Any data written to /data is stored in mydata (outside container).
+ - /data is created inside the container.
+ - Docker also creates a separate storage location on host (hidden path).
+ - Then it links both together.
+- var/lib/docker/volumes - default path for docker volumes.
+
+============================================================================================================================================
+- Dockerfile is a text file with steps to build a Docker image.
+- Dockerfile instructions:
+	- FROM : Base image ; Example: FROM ubuntu
+	- RUN : Runs commands during image build ; Example: RUN apt update
+	- COPY : Copy files from your system ; Example: COPY . /app
+	- ADD : Can copy + download from URL + unzip (extra features like URL, zip)
+	- WORKDIR : Set working folder ; Example: WORKDIR /app
+	- CMD : Runs when container starts, can be overridden easily ; Example: CMD ["nginx", "-g", "daemon off;"]
+	 - -g = pass config directly to nginx
+	 - By default nginx runs in background, Docker needs app in foreground or the container stops.
+	 - nginx -g "daemon off;" : Forces nginx to stay in foreground.
+	- ENTRYPOINT : Fixed command, always runs, Best practice: use both CMD and ENTRYPOINT together (like CMD but stricter) ; Example: ENTRYPOINT ["echo","hello"]
+	- EXPOSE : Inform port ; Example: EXPOSE 80
+	- ENV : Set environment variables ; Example: ENV APP=prod
+	- VOLUME : Declare volume ; Example: VOLUME /data
+	- LABEL : Add metadata ; Example: LABEL version="1.0"
+	- USER : Run container as non-root (security) ; Example: USER appuser
+	- HEALTHCHECK : Check if app is running ; Example: HEALTHCHECK CMD curl --fail http://localhost:80 || exit 1
+	- ARG : Pass variables during build ; Example: ARG VERSION=1.0
+	- ONBUILD : It defines instructions that are triggered when the image is used as a base for another build. ; Example: ONBUILD RUN npm install
+
+- docker build -t myapp . : To execute the Dockerfile, first build an image.
+	- -t myapp = name of image
+	- . = Dockerfile location
+	- docker run -d myapp : to run the container.
