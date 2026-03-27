@@ -43,7 +43,7 @@
 - docker volume ls : to list all volumes.
 - docker system prune : Cleans everything unused (system-wide)
  - docker container prune   # only stopped containers
- - docker image prune       # only unused images
+ - docker image prune       # only unused images (-a for all)
  - docker volume prune      # only unused volumes
  - docker network prune     # only unused networks
 - docker stats : shows live usage of containers.
@@ -56,6 +56,17 @@
  - docker tag myapp username/myapp:latest
  - docker push username/myapp:latest
  - Tag → then push to Docker Hub
+- docker tag <image> <new_name> : Used to give a new name (or version) to an image.
+- docker save -o <file_name>.tar <image_name> : is used to export a Docker image into a tar file for backup or transfer.
+- docker commit <container_name> <new_image_name> : Save container changes as new image
+- docker load -i <file_name>.tar : brings image from file into Docker.
+- docker scout cves <image_name> : Scans image for vulnerabilities.
+- docker network create <network_name> : to create a network.
+- docker run -d --network <network_name> <container_name> : to use the created network with a container.
+- docker network create --subnet 172.18.0.0/16 mynetwork : to create network with a subnet.
+- docker run -d --net mynetwork --ip 172.18.0.10 nginx : run container witha fixed IP.
+- docker compose up : docker compose.
+- aws ecr create-repository --repository-name myrepo : to create ECR repo.
 
 =============================================================================================================================================
 - Docker volumes are used to store data outside the container.
@@ -96,3 +107,35 @@
 	- -t myapp = name of image
 	- . = Dockerfile location
 	- docker run -d myapp : to run the container.
+
+- Single-stage Dockerfiles build and run in one stage, while Multi-Stage Dockerfiles separate build and runtime to create smaller and optimized images.
+- Single-stage → all in one.
+- Multi-stage → build then copy only needed stuff.
+
+- Why multi-stage is smaller :
+ - In single-stage:
+  - You install build tools (like compilers, npm, etc.)
+  - They stay in final image
+  → Bigger size
+  - Single-stage → includes gcc, npm, etc.
+ - In multi-stage:
+  - Stage 1 → build app (tools used here)
+  - Stage 2 → only copy final app
+  - Build tools are left behind
+  - Multi-stage → only final app (no extra tools)
+
+- Dangling images : Images with no name and no tag (<none>:<none>)In single-stage
+
+==================================================================================================================================================
+- Docker network : It lets containers talk to each other and outside world.
+ - Types :
+  - bridge (default) : Default network for containers on one host. Use case: Normal apps talking to each other
+  - host : Container uses host’s network directly. Use case: High performance, no port mapping needed.
+  - none : No network at all. Use case: Fully isolated containers
+  - overlay network : Connects containers across multiple hosts (servers). Use case: Docker Swarm / multi-server apps. Containers on different machines talk like same network.
+  - macvlan network : Gives container its own IP like a real machine on your network. Use case: When container must behave like a separate device. Legacy apps / direct network access.
+  
+==================================================================================================================================================
+- Docker Compose : Tool to run multiple containers together using one file.
+- You define everything in a file (docker-compose.yml{default file name}).
+- Then start all services with one command.

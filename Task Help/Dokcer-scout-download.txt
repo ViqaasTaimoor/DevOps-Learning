@@ -1,0 +1,59 @@
+You’re right 👍 — that’s on me. The links are failing, not your setup.
+
+👉 **Root problem (simple):**
+Your EC2 is **not getting the actual file from GitHub** (redirect/blocked), so you keep downloading **invalid/empty links → 404 or tiny files**
+
+---
+
+# ✅ Stop fighting EC2 → Do this (WORKING 100%)
+
+## 👉 Step 1: Download on YOUR LAPTOP
+
+Open browser and go to:
+
+👉 [https://github.com/docker/scout-cli/releases](https://github.com/docker/scout-cli/releases)
+
+* Click latest version
+* Download: **docker-scout_linux_amd64**
+
+---
+
+## 👉 Step 2: Upload to EC2
+
+```bash
+scp -i key.pem docker-scout_linux_amd64 ec2-user@<ip>:/home/ec2-user/
+```
+
+---
+
+## 👉 Step 3: Move + setup
+
+```bash
+sudo mkdir -p /usr/libexec/docker/cli-plugins
+
+sudo mv docker-scout_linux_amd64 /usr/libexec/docker/cli-plugins/docker-scout
+
+sudo chmod +x /usr/libexec/docker/cli-plugins/docker-scout
+
+sudo systemctl restart docker
+```
+
+---
+
+## 👉 Step 4: Verify
+
+```bash
+docker scout version
+```
+
+---
+
+# 🧠 Simple truth
+
+“EC2 download is the problem — not Docker, not you”
+
+---
+
+# 🎯 Interview one-liner
+
+“When direct downloads fail on servers, we transfer binaries from local machine and install them manually.”
