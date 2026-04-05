@@ -1,0 +1,63 @@
+- Elastic Container Service: It is a service in AWS used to run and manage containers.
+ - A container is like a small package that has your app and everything it needs to run.
+- ECS can:
+	- Run containers
+	- Scale them up or down
+	- Restart them if they fail
+	- Spread them across servers
+	
+-  Clusters: A cluster is a group of servers where your containers run.
+- A cluster can contain:
+	- EC2 instances
+	- AWS Fargate resources
+	- Both together
+	
+Cloud Formation: It is an AWS service used to create and manage cloud resources using a file. Alternative for Terraform.
+
+- ECS Agent: It is a small program that runs on the EC2 server inside an ECS cluster. Its job is to talk between the EC2 instance and ECS.
+	- It tells ECS:
+	- Which containers are running
+	- CPU and memory usage
+	- If a task stopped or failed
+	- When to start or stop containers
+- Without the ECS agent, ECS cannot manage that EC2 instance.
+
+- Task Definition: A task definition is like a blueprint for your container.
+- It tells ECS:
+	- Which Docker image to use
+	- CPU and memory needed
+	- Port numbers
+	- Environment variables
+	- Commands to run
+- If task definition is the blueprint, then task is the actual running container based on that blueprint.
+- While creating a task definition in Amazon Elastic Container Service, keep the container port fixed but leave the host port empty or set it to 0.
+- Example:
+	Container port = 80
+	Host port = 0
+ - Then ECS will automatically choose any free port on the EC2 instance.
+ 
+- Task Placement: It means deciding where a task should run inside the cluster.
+- ECS can place tasks:
+	- On the least used server
+	- On the most used server
+	- Spread them across many servers
+	- Run only on servers with certain tags or rules
+- Common placement types:
+	- Spread = distribute tasks across servers
+	- Binpack = put tasks on fewer servers to save space
+	- Random = place tasks anywhere
+
+- We can auto scale containers using ECS Service Auto Scaling.
+- There are 2 service scheduling types:
+	- Replica:
+	- You decide how many task copies should run
+	- Example: run 3 copies of nginx
+	- ECS will keep exactly 3 running
+	- Daemon:
+	- ECS runs 1 task on every EC2 instance in the cluster
+	- Example: log collector or monitoring agent on every server
+- Replica runs a fixed number of tasks, while daemon runs one task on every server.
+- Deployment types decide how new versions of your app are released.
+	- Rolling update: ECS slowly replaces old containers with new ones
+	- Blue/Green deployment: Old version and new version run separately, then traffic is switched to the new one.
+	- External deployment: Another tool handles the deployment process.

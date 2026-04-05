@@ -1,0 +1,202 @@
+- Kubernetes: Kubernetes is a container orchestration tool used to deploy, manage, scale, and monitor containers automatically. Also called as k8s.
+- Instead of starting containers one by one manually, Kubernetes can:
+	- Start containers
+	- Stop failed containers
+	- Scale containers up or down
+	- Distribute traffic
+	- Keep apps running
+
+Alternatives:
+	- Docker Swarm → Simple and easy for small setups
+	- Amazon ECS → AWS-managed container service
+	- HashiCorp Nomad → Lightweight and easy to manage
+	- OpenShift → Enterprise version of Kubernetes
+	- Apache Mesos with Marathon → Older but still used in some places
+	- Azure Kubernetes Service → Kubernetes managed by Microsoft Azure
+	- Google Kubernetes Engine → Kubernetes managed by Google Cloud
+	
+- Minikube is a tool used to run Kubernetes on your own laptop or local machine. Used only for testing and development purposes.
+
+- minikube start : to start minikube
+- minikube ip : to check ip.
+- minikube ssh : to login to minikube container.
+- kubectl get pods : to check the resources.
+- kubectl get nodes : to check the available nodes.
+- kybectl get pods -a -o wide : to check all details of the pods.
+- kubectl describe pod <podname> : to check complete detailed information of a pod.
+- kubectl get pods -w : real time status of pods.
+- kubectl label pod <podname> env=test : to label pods.
+- kubectl label --overwrite pod <podname> env=dev : to overwrite labels.
+- kubectl get pods --show-labels : to view labels.
+- kubectl explain pods : to get detailed explaination for creating YAML files.
+- kubectl run nginx-pod --image=nginx --dry-run=client -o yaml : shows the YAML without creating the pod.
+- kubectl create -f file.yaml --dry-run=client : checks the YAML file without actually creating anything in Kubernetes.
+- kubectl create -f file.yaml --dry-run=client -o yaml : This shows the final YAML output.
+- kubectl explain pod --recursive : shows all fields available for that resource and their nested fields too.
+- kubectl edit pod <podname> : to edit the pod YAML.
+- kubectl apply -f pod.yaml : can create if not present, and update if already present.
+
+- A pod is the smallest deployable unit in Kubernetes and usually contains one container.
+
+- Flannel : It is a Kubernetes networking plugin that allows pods on different nodes to communicate with each other.
+ - It helps pods talk to each other across different servers.
+ - Without Flannel, pods running on different machines may not be able to communicate.
+ 
+- Replica Set : A ReplicaSet in Kubernetes makes sure a fixed number of pods are always running.
+
+==========================================================================================================================================================
+- In Kubernetes, a Deployment is used to manage pods easily. A Deployment manages ReplicaSets, ReplicaSets manage Pods, and Pods run containers.
+- It can:
+	- Create pods
+	- Update pods
+	- Scale pods
+	- Roll back to older versions
+- Hierarchy is:
+ - Deployment → ReplicaSet → Pod → Container
+  - Deployment manages ReplicaSet
+  - ReplicaSet manages Pods
+  - Pod contains Container
+- Example:
+  - If you create a Deployment with 3 replicas:
+	- Deployment creates ReplicaSet
+	- ReplicaSet creates 3 Pods
+	- Each Pod runs your container.
+==========================================================================================================================================================
+- Namespaces are used in Kubernetes to separate and organize resources within the same cluster
+- Think of them like folders.
+- Example:
+	- One namespace for dev
+	- One namespace for test
+	- One namespace for production
+==========================================================================================================================================================	
+- A Service in Kubernetes gives a stable way to access pods. Because pod IPs can change when pods restart, a Service gives one fixed IP or name in front of them.
+- Types of services:
+	- ClusterIP → only inside cluster
+	- NodePort → accessible from outside using server IP and port
+	- LoadBalancer → accessible from outside using cloud load balancer
+==========================================================================================================================================================
+- Master node components:
+	- kube-apiserver
+	- etcd
+	- scheduler
+	- controller-manager
+
+- Worker node components:
+	- kubelet
+	- kube-proxy
+	- container runtime like Docker or containerd
+
+- The kube API server is the main control point in Kubernetes that receives and processes all cluster requests.
+- It acts like the middleman between users and the cluster.
+
+- etcd is the key-value database used by Kubernetes to store all cluster information.
+- If etcd data is lost, the cluster can lose its state.
+
+- The scheduler in Kubernetes decides which worker node should run a pod.
+- If you create a new pod, the scheduler checks:
+	- Which node has free CPU
+	- Which node has free memory
+	- Which node matches the rules
+	- Then it places the pod there.
+	
+- The controller manager continuously checks the cluster and makes sure the desired state is maintained.
+ - Example:
+	- If you want 3 pods but only 2 are running, controller manager notices it and creates the missing pod.
+	- It keeps the cluster matching what you requested.
+	
+- A container runtime is the software that actually runs containers.
+- Kubernetes tells the container runtime what to do, and the runtime starts or stops containers.
+ - Common container runtimes:
+	- Docker
+	- containerd
+	- CRI-O
+
+- The kubelet is an agent on each node that makes sure the required pods are running.
+- It receives instructions from the master and makes sure the required pods are running on that node.
+
+- The kube-proxy runs on every node in Kubernetes. The kube-proxy manages networking and sends traffic from services to the correct pods.
+- Its job is to manage network traffic between services and pods.
+
+- A multi-container pod means one pod has more than one container inside it.
+- Example:
+	- One container runs the main app
+	- Another container collects logs or acts like a helper.
+
+==========================================================================================================================================================
+
+- For a basic Kubernetes YAML file, the common required fields are:
+	- apiVersion
+	- kind
+	- metadata
+	- spec
+
+- Example:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+
+
+
+Meaning:
+- apiVersion → Kubernetes API version
+- kind → What you are creating
+- metadata → Name and details
+- spec → Actual configuration
+
+
+- Common apiVersion values in Kubernetes are:
+	v1 → Pod, Service, Namespace, ConfigMap, Secret
+	apps/v1 → Deployment, ReplicaSet, StatefulSet, DaemonSet
+	batch/v1 → Job, CronJob
+	networking.k8s.io/v1 → Ingress, NetworkPolicy
+	autoscaling/v2 → HorizontalPodAutoscaler
+
+- Some common values for kind in Kubernetes are:
+	Pod
+	Deployment
+	ReplicaSet
+	Service
+	Namespace
+	ConfigMap
+	Secret
+	StatefulSet
+	DaemonSet
+	Job
+	CronJob
+	Ingress
+	PersistentVolume
+	PersistentVolumeClaim
+	
+- Common fields inside metadata are:
+	name → resource name
+	namespace → where it belongs
+	labels → tags used for grouping and selection
+	
+- Inside spec you usually define:
+	Image
+	Container name
+	Ports
+	Replicas
+	Labels
+	Volumes
+==========================================================================================================================================================
+- kubectl create only creates new resources, while kubectl apply can create or update existing resources.
+	- kubectl create is mainly used to create a new resource for the first time.
+	- If the resource already exists, it gives an error.
+	- kubectl apply can create if not present, and update if already present.
+
+
+- Init containers are special containers that run before the main container starts in a pod.
+- They are used for setup work like:
+	- Waiting for database
+	- Creating folders
+	- Downloading files
+	- Checking dependencies
+- Example: An init container may wait until the database is ready, then the app container starts.
